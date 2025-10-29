@@ -2,7 +2,7 @@ import time
 import json
 import uuid
 import requests
-
+from serverchan_sdk import sc_send
 from tkinter import Tk, Label
 from PIL import ImageTk, Image
 from selenium import webdriver
@@ -11,6 +11,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from parse_rollcalls import parse_rollcalls
+
+sendkey = "sctp12768ttthqu5p5oamaozkdryqz7x"
 
 with open("config.json") as f:
     config = json.load(f)
@@ -33,10 +35,12 @@ chrome_options.add_argument("--headless")  # 无头运行
 
 
 print("正在初始化...")
+sc_send(sendkey, "签到机器人", "正在初始化...", {"tags": "签到机器人"})
 driver = webdriver.Chrome(options=chrome_options)
 
 driver.get("https://lnt.xmu.edu.cn")
 print("已连接到厦大数字化教学平台。")
+sc_send(sendkey, "签到机器人", "已连接。正在登录...", {"tags": "签到机器人"})
 
 WebDriverWait(driver, 10).until(
     EC.element_to_be_clickable((By.ID, "userNameLogin_a"))
@@ -50,6 +54,7 @@ time.sleep(1)
 res = requests.get(api_url, cookies={c['name']: c['value'] for c in driver.get_cookies()})
 if res.status_code == 200:
     print("登录成功！五秒后进入监控...")
+    sc_send(sendkey, "签到机器人", "登录成功！五秒后进入监控模式...", {"tags": "签到机器人"})
 else:
     print("账号密码登录失败,正在获得登录二维码...")
     driver.find_element(By.ID, "qrLogin_a").click()
@@ -75,6 +80,7 @@ time.sleep(5)
 
 deviceID = uuid.uuid4()
 print(f"签到监控启动。")
+sc_send(sendkey, "签到机器人", "签到监控已启动。", {"tags": "签到机器人"})
 start = time.time()
 temp_data = {'rollcalls': []}
 while True:
@@ -95,6 +101,7 @@ while True:
 
     elif res['status'] != 200:
         print("失去连接，请重新登录。")
+        sc_send(sendkey, "签到机器人", "失去连接，监控已终止。", {"tags": "签到机器人"})
         break
     time.sleep(interval)
 

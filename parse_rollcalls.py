@@ -1,5 +1,8 @@
 import time
 from send_code import send_code
+from serverchan_sdk import sc_send
+
+sendkey = "sctp12768ttthqu5p5oamaozkdryqz7x"
 
 def decode_rollcall(data):
     rollcalls = data['rollcalls']
@@ -43,6 +46,7 @@ def parse_rollcalls(data, driver):
             else:
                 temp_str = "数字签到"
             print(f"签到类型：{temp_str}\n")
+            sc_send(sendkey, "签到机器人", f"新的签到事件:[{rollcalls[i]['course_title']}],由 {rollcalls[i]['created_by_name']} 创建。", {"tags": "签到机器人"})
             if (rollcalls[i]['status'] == 'absent') & (rollcalls[i]['is_number']) & (not rollcalls[i]['is_radar']):
                 if send_code(driver, rollcalls[i]['rollcall_id']):
                     print("签到成功！")
