@@ -1,3 +1,6 @@
+# 厦大数字化教学平台自动签到机器人 V1.0
+# by KrsMt-0113
+
 import time
 import json
 import uuid
@@ -12,36 +15,39 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from parse_rollcalls import parse_rollcalls
 
-sendkey = "sctp12768ttthqu5p5oamaozkdryqz7x"
-
+# 读取学号、密码、Server酱sendkey
 with open("config.json") as f:
     config = json.load(f)
     username = config["username"]
     password = config["password"]
-api_url = "https://lnt.xmu.edu.cn/api/radar/rollcalls"
-interval = 1.5  # 轮询间隔
+    sendkey = config["sendkey"]
 
+# 签到列表获取接口，轮询间隔，轮询脚本
+api_url = "https://lnt.xmu.edu.cn/api/radar/rollcalls"
+interval = 1.5
 fetch_script = """
 const url = arguments[0];
 const callback = arguments[arguments.length - 1];
 fetch(url, {credentials: 'include'})
   .then(resp => resp.text().then(text => callback({status: resp.status, ok: resp.ok, text: text})))
   .catch(err => callback({error: String(err)}));
-"""  # 轮询脚本
+"""
 
 chrome_options = Options()
 # chrome_options.add_argument("--start-maximized")   # 有头调试
 chrome_options.add_argument("--headless")  # 无头运行
 
-
+# 启动selenium
 print("正在初始化...")
 sc_send(sendkey, "签到机器人", "正在初始化...", {"tags": "签到机器人"})
 driver = webdriver.Chrome(options=chrome_options)
 
+# 访问登录页面,不开VPN好像连不上
 driver.get("https://lnt.xmu.edu.cn")
 print("已连接到厦大数字化教学平台。")
 
-# 检查是否需要验证码
+# 检查是否需要验证码，有验证码直接登录，否则扫码
+# 待优化: 提取验证码图片，OCR识别或用户自行登录
 ts = int(time.time() * 1000)
 print(ts)
 res_data = requests.get(f"https://ids.xmu.edu.cn/authserver/checkNeedCaptcha.htl?username={username}&_={ts}").json()
