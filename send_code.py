@@ -31,6 +31,7 @@ def send_code(driver, rollcall_id):
         return None
 
     headers = {
+        "User-Agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36 Edg/141.0.0.0",
         "Content-Type": "application/json"
     }
     cookies_list = driver.get_cookies()
