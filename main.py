@@ -4,7 +4,6 @@ import time
 import json
 import uuid
 import requests
-
 from serverchan_sdk import sc_send
 from tkinter import Tk, Label
 from PIL import ImageTk, Image
