@@ -1,8 +1,11 @@
 import time
+import json
 from send_code import send_code
 from serverchan_sdk import sc_send
 
-sendkey = "sctp12768ttthqu5p5oamaozkdryqz7x"
+with open("config.json") as f:
+    config = json.load(f)
+    sendkey = config["sendkey"]
 
 def decode_rollcall(data):
     rollcalls = data['rollcalls']
@@ -47,7 +50,7 @@ def parse_rollcalls(data, driver):
                 temp_str = "数字签到"
             print(f"签到类型：{temp_str}\n")
             if (rollcalls[i]['status'] == 'absent') & (rollcalls[i]['is_number']) & (not rollcalls[i]['is_radar']):
-                sc_send(sendkey, "签到机器人", f"新的签到事件:[{rollcalls[i]['course_title']}],由 {rollcalls[i]['created_by_name']} 创建。", {"tags": "签到机器人"})
+                sc_send(sendkey, "签到机器人", f"新的数字签到:[{rollcalls[i]['course_title']}],由 {rollcalls[i]['created_by_name']} 创建。", {"tags": "签到机器人"})
                 if send_code(driver, rollcalls[i]['rollcall_id']):
                     print("签到成功！")
                     return True
@@ -59,6 +62,7 @@ def parse_rollcalls(data, driver):
                 return True
             elif rollcalls[i]['is_radar']:
                 print("本签到为/包含雷达签到，请自行操作。")
+                sc_send(sendkey, "签到机器人", f"新的雷达签到:[{rollcalls[i]['course_title']}],由 {rollcalls[i]['created_by_name']} 创建，请自行签到。", {"tags": "签到机器人"})
                 return False
             else:
                 return False

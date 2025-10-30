@@ -2,10 +2,13 @@ import uuid
 import time
 import threading
 import requests
+import json
 from serverchan_sdk import sc_send
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-sendkey = "sctp12768ttthqu5p5oamaozkdryqz7x"
+with open("config.json") as f:
+    config = json.load(f)
+    sendkey = config["sendkey"]
 
 def pad(i):
     return str(i).zfill(4)
