@@ -19,7 +19,7 @@ class SignalEmitter(QThread):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("XMU RollCall Bot v1.0")
+        self.setWindowTitle("XMU RollCall Bot v2.0")
         self.setMinimumSize(600, 600)
 
         # 设置主题颜色

@@ -12,6 +12,10 @@
    
     > `main.py`登录，启动监控 → 监测到签到任务 → `parse_rollcalls.py`解析任务信息 → `send_code.py`遍历并发送签到码 → 完成签到。
 
+    `gui.py`: 图形界面模块。
+
+    `main_gui.py`: 图形界面主程序。
+
 2. 环境准备
 
    - `Python`版本: 建议 `3.13.*`
