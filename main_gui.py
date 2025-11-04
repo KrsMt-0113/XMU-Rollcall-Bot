@@ -103,8 +103,9 @@ fetch(url, {credentials: 'include'})
                 time.sleep(1)
 
                 # 截图并显示二维码
-                self.driver.get_screenshot_as_file("cache/fullpage.png")
-                self.signals.qr_code.emit("cache/fullpage.png")
+                elem = self.driver.find_element(By.ID, "qr_img")
+                elem.screenshot("cache/qr_code.png")
+                self.signals.qr_code.emit("cache/qr_code.png")
 
                 # 等待登录成功（轮询检查）
                 login_success = False
@@ -127,6 +128,7 @@ fetch(url, {credentials: 'include'})
                     return
 
             # 验证登录
+            time.sleep(3)
             res = requests.get(api_url, cookies={c['name']: c['value'] for c in self.driver.get_cookies()})
             if res.status_code == 200:
                 self.log("Successfully login!", "success")
