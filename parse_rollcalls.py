@@ -1,5 +1,4 @@
 import time
-import json
 from verify import send_code, send_radar
 
 def decode_rollcall(data):

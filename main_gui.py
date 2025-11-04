@@ -210,7 +210,6 @@ def main():
             config = json.load(f)
             username = config["username"]
             password = config["password"]
-            sendkey = config["sendkey"]
     except Exception as e:
         print(f"读取配置文件失败: {e}")
         return
@@ -222,7 +221,7 @@ def main():
     window = MainWindow()
 
     # 创建工作线程
-    worker = MonitorWorker(username, password, sendkey)
+    worker = MonitorWorker(username, password, sendkey="")  # sendkey留空表示不发送通知
 
     # 连接信号
     worker.signals.log.connect(window.add_log)
