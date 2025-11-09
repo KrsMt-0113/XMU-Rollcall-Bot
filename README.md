@@ -2,6 +2,8 @@
 
 > 本项目除 `main_gui.py`, `gui.py` 为 Github Copilot(Claude Sonnet 4.5)生成, 其余均为纯手打, CLI 版本放心使用, GUI 可能会有未预料到的错误，如有请发 issue。
 
+> 本项目适用于其他 tronclass 平台的签到活动，欢迎其他学校的朋友contribute, 后续可以考虑建立新仓库收录各校版本的`rollcall bot`.
+
 使用方法在 [这里](quickstart.md) 查看
 
 高性能分支 `performance` 已推出，请前往 [这里](https://github.com/KrsMt-0113/XMU-Rollcall-Bot/tree/aiohttp) 查看并使用。
