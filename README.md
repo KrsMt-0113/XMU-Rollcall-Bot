@@ -1,5 +1,7 @@
 # 厦门大学数字化教学平台自动签到工具 - 更新日志
 
+> AIGC 声明：本项目除 `main_gui.py`, `gui.py` 为 Github Copilot(Claude Sonnet 4.5)生成，其余均为纯手打, CLI 版本放心使用, GUI 可能会有未预料到的错误，如有请发 issue。
+
 使用方法在 [这里](quickstart.md) 查看
 
 高性能分支 `performance` 已推出，请前往 [这里](https://github.com/KrsMt-0113/XMU-Rollcall-Bot/tree/aiohttp) 查看并使用。
