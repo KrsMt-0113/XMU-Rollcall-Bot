@@ -48,7 +48,7 @@ requests.get(
 
 对于数字签到，载荷如下：
 
-```json
+```python
 {
   "deviceId": "设备标识符，可以用 uuid.uuid4() 生成随机的设备标识符",
   "numberCode": "签到码"
@@ -57,9 +57,9 @@ requests.get(
 
 对于雷达签到，载荷如下：
 
-```json
+```python
 {
-  "accuracy": 35, // 精度，单位米
+  "accuracy": 35,
   "altitude": 0,
   "altitudeAccuracy": None,
   "deviceId": "设备标识符，同上",
