@@ -12,9 +12,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from parse_rollcalls import parse_rollcalls
+from get_config import get_config_path
 
 # 读取学号、密码、Server酱sendkey
-with open("config.json") as f:
+with open(get_config_path()) as f:
     config = json.load(f)
     username = config["username"]
     password = config["password"]

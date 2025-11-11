@@ -3,9 +3,10 @@ import threading
 import requests
 import time
 import json
+from get_config import get_config_path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-with open("config.json") as f:
+with open(get_config_path()) as f:
     config = json.load(f)
     latitude = config["latitude"]
     longitude = config["longitude"]

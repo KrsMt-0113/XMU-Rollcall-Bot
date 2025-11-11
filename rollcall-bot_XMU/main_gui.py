@@ -14,6 +14,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from parse_rollcalls import parse_rollcalls
 from gui import MainWindow
+from get_config import get_config_path
 
 
 class WorkerSignals(QObject):
@@ -208,7 +209,7 @@ def main():
     """主函数"""
     # 读取配置
     try:
-        with open("rollcall-bot_XMU/config.json") as f:
+        with open(get_config_path()) as f:
             config = json.load(f)
             username = config["username"]
             password = config["password"]
