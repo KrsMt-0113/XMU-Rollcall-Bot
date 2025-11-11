@@ -1,4 +1,4 @@
-### 如果你想做一个最小可用程序，那么这是你要看的...
+### 如果你想做一个最小可用程序，那么你需要看这个...
 
 #### 1. 登录
 
@@ -42,9 +42,9 @@ requests.get(
 
 #### 3. 签到
 
-获取到 `rollcall_id` 后，可以在 `api/rollcall/{rollcall_id}/answer`接口发起签到。
+获取到 `rollcall_id` 后，可以在 `api/rollcall/{rollcall_id}/answer` 接口发起签到。
 
-此时，向该接口发起 `PUT` 请求并携带相应的*载荷*即可。
+此时，向该接口发起 `PUT` 请求并携带相应的载荷即可。
 
 对于数字签到，载荷如下：
 
@@ -81,7 +81,7 @@ requests.put(
 )
 ```
 
-这里, `headers` 用于冒充真实浏览器环境，可以写:
+这里，`headers` 用于冒充真实浏览器环境，可以写：
 
 ```python
 headers = {

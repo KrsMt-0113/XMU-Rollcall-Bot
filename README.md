@@ -2,23 +2,23 @@
 
 > 如果你没接触过代码，不会运行程序，那么请在[这里](https://github.com/KrsMt-0113/XMU-Rollcall-Bot/releases)下载可以直接运行的版本。
 
-> 本项目除 `main_gui.py`, `gui.py` 为 Github Copilot(Claude Sonnet 4.5)生成, 其余均为纯手打, CLI 版本放心使用, GUI 可能会有未预料到的错误，如有请发 issue。
+> 本项目除 `main_gui.py`、`gui.py` 为 Github Copilot(Claude Sonnet 4.5) 生成外，其余均为纯手打，CLI 版本可放心使用，GUI 可能会有未预料到的错误，如有请发 issue。
 
-> 本项目适用于其他 **tronclass** 平台的签到活动，欢迎其他学校的朋友开**issue**提供对应**url**以及**登录方法**, 后续可以考虑建立新仓库收录各校版本的`rollcall bot`.同时欢迎提供**二维码签到**的相关日志(开发者工具中的*Network(网络)*)。
+> 本项目适用于其他 **tronclass** 平台的签到活动，欢迎其他学校的朋友开 **issue** 提供对应 **url** 以及**登录方法**，后续可以考虑建立新仓库收录各校版本的 `rollcall bot`。同时欢迎提供**二维码签到**的相关日志（开发者工具中的 *Network(网络)*）。
 
-> ~~高性能分支已暂停维护，在测试过程中遇到了令我头疼的错误, 也许接口有限速造成了我被拒绝连接, 但用 requests 进行高并发压力测试时又不存在这种问题，可能是我不懂 aiohttp 吧。~~
+> ~~高性能分支已暂停维护，在测试过程中遇到了令我头疼的错误，也许接口有限速造成了我被拒绝连接，但用 requests 进行高并发压力测试时又不存在这种问题，可能是我不懂 aiohttp 吧。~~
 > 
->我成功了。切换到[`aiohttp`分支](https://github.com/KrsMt-0113/XMU-Rollcall-Bot/tree/aiohttp)看看吧。
+> 经过不断尝试，高性能分支已成功实现。切换到 [`aiohttp` 分支](https://github.com/KrsMt-0113/XMU-Rollcall-Bot/tree/aiohttp)看看吧。
 
 > 欢迎加入反馈QQ群：904879205
 
-***给个星标行吗?***
+***给个星标行吗？***
 
 使用方法在[这里](quickstart.md)查看；
 
 适用于 Windows 的可执行文件(.exe)已上传到[这里](https://github.com/KrsMt-0113/XMU-Rollcall-Bot/tree/main/XMUrcbot_win)，使用方法详见由 [@yt0592](https://github.com/yt0592) 撰写的[文档](XMUrcbot_win/README.md)；
 
-如果你想用最短的代码实现签到功能，请参考[这里](demo.md) ；
+如果你想用最短的代码实现签到功能，请参考[这里](demo.md)；
 
 高性能分支 `aiohttp` 已推出，请前往[这里](https://github.com/KrsMt-0113/XMU-Rollcall-Bot/tree/aiohttp)；
 
