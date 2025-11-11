@@ -1,5 +1,7 @@
 # XMU 自动签到工具 - 更新日志
 
+> 如果你没接触过代码，不会运行程序，那么请在[这里](https://github.com/KrsMt-0113/XMU-Rollcall-Bot/releases)下载可以直接运行的版本。
+
 > 本项目除 `main_gui.py`, `gui.py` 为 Github Copilot(Claude Sonnet 4.5)生成, 其余均为纯手打, CLI 版本放心使用, GUI 可能会有未预料到的错误，如有请发 issue。
 
 > 本项目适用于其他 **tronclass** 平台的签到活动，欢迎其他学校的朋友开**issue**提供对应**url**以及**登录方法**, 后续可以考虑建立新仓库收录各校版本的`rollcall bot`.同时欢迎提供**二维码签到**的相关日志(开发者工具中的*Network(网络)*)。
