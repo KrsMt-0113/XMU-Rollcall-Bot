@@ -18,15 +18,15 @@
 
 2. 环境准备
 
-   - `Python`版本: 建议 `3.13.*`
+   - `Python` 版本：建议 `3.13.*`
     
-   - 安装依赖: `pip install -r requirements.txt`
+   - 安装依赖：`pip install -r requirements.txt`
 
-   - 网络环境: 可能需要 VPN，`Selenium`存在无法直连的情况。
+   - 网络环境：可能需要 VPN，`Selenium` 在某些环境下可能存在无法直连的情况。
    
 3. 配置文件
 
-    在 `config.json` 中的对应位置填入账号、密码、Server酱的sendkey（可不填）。
+    在 `config.json` 中的对应位置填入账号、密码、Server酱的 sendkey（可不填）。
 
     ```json
     {
