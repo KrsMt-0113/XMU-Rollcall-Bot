@@ -12,21 +12,13 @@
 
 ***给个星标行吗?***
 
-## Contributors:
+使用方法在[这里](quickstart.md)查看；
 
-<a href="https://github.com/KrsMt-0113/XMU-Rollcall-Bot/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=KrsMt-0113/XMU-Rollcall-Bot" />
-</a>
+适用于 Windows 的可执行文件(.exe)已上传到[这里](https://github.com/KrsMt-0113/XMU-Rollcall-Bot/tree/main/XMUrcbot_win)，使用方法详见由 [@yt0592](https://github.com/yt0592) 撰写的[文档](XMUrcbot_win/README.md)；
 
----
+如果你想用最短的代码实现签到功能，请参考[这里](demo.md) ；
 
-使用方法在 [这里](quickstart.md) 查看
-
-适用于 Windows 的可执行文件(.exe)已上传到[这里](https://github.com/KrsMt-0113/XMU-Rollcall-Bot/tree/main/XMUrcbot_win)，使用方法详见由 [@yt0592](https://github.com/yt0592) 撰写的[文档](XMUrcbot_win/README.md)。
-
-如果你想用最短的代码实现签到功能，请参考 [demo.md](demo.md) 。
-
-高性能分支 `performance` 已推出，请前往 [这里](https://github.com/KrsMt-0113/XMU-Rollcall-Bot/tree/aiohttp) 查看并使用。
+高性能分支 `aiohttp` 已推出，请前往[这里](https://github.com/KrsMt-0113/XMU-Rollcall-Bot/tree/aiohttp)；
 
 ## 版本 `1.0.0` - *2025-10-29*
 
@@ -54,8 +46,12 @@
 
 - 加入雷达签到功能，暂时仅支持庄汉水楼雷达签到，其他位置待补充。
 
-## 分支 `performance` - *2025-11-04*
+## 分支 `aiohttp` - *2025-11-04*
 
 - 高性能版本，仅CLI模式，基于 `aiohttp` 实现异步请求。
 - ~~暂停维护。~~
 - 2025-11-10, 首次测试成功，将在下一个版本中加入主分支。
+
+## 版本 `2.1.0` - *2025-11-11*
+
+- 修修补补。
