@@ -61,13 +61,13 @@ def send_radar(driver, rollcall_id):
         "Content-Type": "application/json"
     }
     payload = {
-        "accuracy": 35,
+        "accuracy": 35,  # 精度，写无限大会不会在哪都能签？
         "altitude": 0,
         "altitudeAccuracy": None,
         "deviceId": str(uuid.uuid1()),
         "heading": None,
         "latitude": latitude,
-        "longitude": longitude,  # 庄汉水楼，后续加入更多位置
+        "longitude": longitude,
         "speed": None
     }
     res = requests.put(url, json=payload, headers=headers, cookies={c['name']: c['value'] for c in driver.get_cookies()})
