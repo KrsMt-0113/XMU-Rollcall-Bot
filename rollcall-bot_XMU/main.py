@@ -15,7 +15,7 @@ from parse_rollcalls import parse_rollcalls
 from get_config import get_config_path
 
 # 读取学号、密码、Server酱sendkey
-with open(get_config_path()) as f:
+with open(get_config_path(), "r", encoding="utf-8") as f:
     config = json.load(f)
     username = config["username"]
     password = config["password"]

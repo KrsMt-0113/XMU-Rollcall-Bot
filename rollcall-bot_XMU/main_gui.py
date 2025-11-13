@@ -209,7 +209,7 @@ def main():
     """主函数"""
     # 读取配置
     try:
-        with open(get_config_path()) as f:
+        with open(get_config_path(), "r", encoding="utf-8") as f:
             config = json.load(f)
             username = config["username"]
             password = config["password"]
