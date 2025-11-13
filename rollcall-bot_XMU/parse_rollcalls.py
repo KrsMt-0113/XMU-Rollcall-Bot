@@ -43,25 +43,33 @@ def parse_rollcalls(data, driver):
             else:
                 temp_str = "数字签到"
             print(f"签到类型：{temp_str}\n")
+            is_last = (i == count - 1)
             if (rollcalls[i]['status'] == 'absent') & (rollcalls[i]['is_number']) & (not rollcalls[i]['is_radar']):
                 if send_code(driver, rollcalls[i]['rollcall_id']):
                     print("签到成功！")
-                    return True
+                    if is_last:
+                        return True
                 else:
                     print("签到失败。")
-                    return False
+                    if is_last:
+                        return False
             elif rollcalls[i]['status'] == 'on_call_fine':
                 print("该签到已完成。")
-                return True
+                if is_last:
+                    return True
             elif rollcalls[i]['is_radar']:
                 if send_radar(driver, rollcalls[i]['rollcall_id']):
                     print("签到成功！")
-                    return True
+                    if is_last:
+                        return True
                 else:
                     print("签到失败。")
-                    return False
+                    if is_last:
+                        return False
             else:
-                return False
+                if is_last:
+                    return False
+        return True
     else:
         print("当前无签到活动。")
         return False
