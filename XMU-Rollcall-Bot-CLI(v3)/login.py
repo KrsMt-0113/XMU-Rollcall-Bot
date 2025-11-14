@@ -1,8 +1,11 @@
-import requests, base64, random, re, time, json
+import requests, base64, random, re, time, json, os, sys
 from Crypto.Cipher import AES
 from misc import c
 
-with open("info.txt", "r", encoding="utf-8") as f:
+base_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+file_path = os.path.join(base_dir, "info.txt")
+
+with open(file_path, "r", encoding="utf-8") as f:
     lines = f.readlines()
     USERNAME = lines[0].strip()
     pwd = lines[1].strip()

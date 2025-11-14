@@ -1,4 +1,7 @@
-import uuid, time, asyncio, aiohttp
+import uuid, time, asyncio, aiohttp, os, sys
+
+base_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+file_path = os.path.join(base_dir, "info.txt")
 
 headers = {
     "User-Agent": (
@@ -12,7 +15,7 @@ headers = {
 }
 base_url = "https://lnt.xmu.edu.cn"
 
-with open("info.txt", "r", encoding="utf-8") as f:
+with open(file_path, "r", encoding="utf-8") as f:
     lines = f.readlines()
     latitude = lines[2].strip()
     longitude = lines[3].strip()

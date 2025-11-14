@@ -6,6 +6,8 @@
 
 ### ***此次更新基于大家使用过程中的所有反馈.***
 
+![Screenshot](XMU-Rollcall-Bot-CLI(v3)/screenshot.png)
+
 ## 1. Selenium 启动慢、启动难
 
 - 在这个版本，我们 **彻底抛弃** 了 Selenium。使用 Selenium 的初衷是因为我想偷懒，但事实证明代价是巨大的：我们收到许多关于 Chromedriver 无法被正常识别，或是无法正常连接至 Course 平台的反馈。
