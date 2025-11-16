@@ -91,10 +91,11 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1&quot;: &quot;true&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/wuqifeng/IdeaProjects/Comet/XMU-Rollcall-Bot-CLI&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/wuqifeng/IdeaProjects/Comet/XMU-Rollcall-Bot-CLI(v3)/dist&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -105,12 +106,14 @@
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;com.github.copilot.settings.mcp.McpConfigurable&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/XMU-Rollcall-Bot-CLI(v3)/dist" />
       <recent name="$PROJECT_DIR$/XMU-Rollcall-Bot-CLI" />
       <recent name="$PROJECT_DIR$/dist/RollcallBot" />
       <recent name="$PROJECT_DIR$/dist/main_gui.app/Contents/MacOS" />
@@ -122,58 +125,6 @@
       <recent name="$PROJECT_DIR$/XMUrcbot_win" />
       <recent name="$PROJECT_DIR$/rollcall-bot_XMU" />
     </key>
-  </component>
-  <component name="RunManager" selected="Python.RollCall_bot">
-    <configuration name="RCbot_gui" type="PythonConfigurationType" factoryName="Python">
-      <module name="RollCall" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="Python 3.13 (Comet)" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/rollcall-bot_XMU/main_gui.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="RollCall_bot" type="PythonConfigurationType" factoryName="Python">
-      <module name="RollCall" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="Python 3.12" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/rollcall-bot_XMU/main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <list>
-      <item itemvalue="Python.RollCall_bot" />
-      <item itemvalue="Python.RCbot_gui" />
-    </list>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -257,118 +208,11 @@
       <workItem from="1763004084147" duration="591000" />
       <workItem from="1763051689354" duration="726000" />
       <workItem from="1763083474966" duration="20196000" />
-    </task>
-    <task id="LOCAL-00051" summary="XMU RollCall Bot">
-      <option name="closed" value="true" />
-      <created>1762192454459</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1762192454459</updated>
-    </task>
-    <task id="LOCAL-00052" summary="XMU RollCall Bot">
-      <option name="closed" value="true" />
-      <created>1762192671067</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1762192671067</updated>
-    </task>
-    <task id="LOCAL-00053" summary="XMU RollCall Bot">
-      <option name="closed" value="true" />
-      <created>1762192749233</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1762192749233</updated>
-    </task>
-    <task id="LOCAL-00054" summary="XMU RollCall Bot">
-      <option name="closed" value="true" />
-      <created>1762247396717</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1762247396718</updated>
-    </task>
-    <task id="LOCAL-00055" summary="XMU RollCall Bot">
-      <option name="closed" value="true" />
-      <created>1762249228582</created>
-      <option name="number" value="00055" />
-      <option name="presentableId" value="LOCAL-00055" />
-      <option name="project" value="LOCAL" />
-      <updated>1762249228582</updated>
-    </task>
-    <task id="LOCAL-00056" summary="XMU RollCall Bot">
-      <option name="closed" value="true" />
-      <created>1762249675316</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1762249675316</updated>
-    </task>
-    <task id="LOCAL-00057" summary="XMU RollCall Bot">
-      <option name="closed" value="true" />
-      <created>1762255127884</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
-      <option name="project" value="LOCAL" />
-      <updated>1762255127885</updated>
-    </task>
-    <task id="LOCAL-00058" summary="XMU RollCall Bot">
-      <option name="closed" value="true" />
-      <created>1762675714769</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1762675714769</updated>
-    </task>
-    <task id="LOCAL-00059" summary="XMU RollCall Bot">
-      <option name="closed" value="true" />
-      <created>1762676087510</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
-      <option name="project" value="LOCAL" />
-      <updated>1762676087510</updated>
-    </task>
-    <task id="LOCAL-00060" summary="XMU RollCall Bot">
-      <option name="closed" value="true" />
-      <created>1762677579434</created>
-      <option name="number" value="00060" />
-      <option name="presentableId" value="LOCAL-00060" />
-      <option name="project" value="LOCAL" />
-      <updated>1762677579434</updated>
-    </task>
-    <task id="LOCAL-00061" summary="XMU RollCall Bot">
-      <option name="closed" value="true" />
-      <created>1762677768953</created>
-      <option name="number" value="00061" />
-      <option name="presentableId" value="LOCAL-00061" />
-      <option name="project" value="LOCAL" />
-      <updated>1762677768953</updated>
-    </task>
-    <task id="LOCAL-00062" summary="XMU RollCall Bot">
-      <option name="closed" value="true" />
-      <created>1762678401753</created>
-      <option name="number" value="00062" />
-      <option name="presentableId" value="LOCAL-00062" />
-      <option name="project" value="LOCAL" />
-      <updated>1762678401753</updated>
-    </task>
-    <task id="LOCAL-00063" summary="XMU RollCall Bot">
-      <option name="closed" value="true" />
-      <created>1762766690040</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
-      <option name="project" value="LOCAL" />
-      <updated>1762766690041</updated>
-    </task>
-    <task id="LOCAL-00064" summary="XMU RollCall Bot">
-      <option name="closed" value="true" />
-      <created>1762772347640</created>
-      <option name="number" value="00064" />
-      <option name="presentableId" value="LOCAL-00064" />
-      <option name="project" value="LOCAL" />
-      <updated>1762772347640</updated>
+      <workItem from="1763115179605" duration="3274000" />
+      <workItem from="1763121078407" duration="24000" />
+      <workItem from="1763125920303" duration="10942000" />
+      <workItem from="1763220499391" duration="2000" />
+      <workItem from="1763220511196" duration="12101000" />
     </task>
     <task id="LOCAL-00065" summary="XMU RollCall Bot">
       <option name="closed" value="true" />
@@ -650,11 +494,146 @@
       <option name="project" value="LOCAL" />
       <updated>1763114495973</updated>
     </task>
-    <option name="localTasksCounter" value="100" />
+    <task id="LOCAL-00100" summary="XMU RollCall Bot">
+      <option name="closed" value="true" />
+      <created>1763115223314</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1763115223315</updated>
+    </task>
+    <task id="LOCAL-00101" summary="XMU RollCall Bot">
+      <option name="closed" value="true" />
+      <created>1763126729704</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1763126729705</updated>
+    </task>
+    <task id="LOCAL-00102" summary="XMU RollCall Bot">
+      <option name="closed" value="true" />
+      <created>1763172860114</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1763172860114</updated>
+    </task>
+    <task id="LOCAL-00103" summary="XMU RollCall Bot">
+      <option name="closed" value="true" />
+      <created>1763172891499</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1763172891499</updated>
+    </task>
+    <task id="LOCAL-00104" summary="XMU RollCall Bot">
+      <option name="closed" value="true" />
+      <created>1763172913234</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1763172913234</updated>
+    </task>
+    <task id="LOCAL-00105" summary="XMU RollCall Bot">
+      <option name="closed" value="true" />
+      <created>1763172938273</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1763172938273</updated>
+    </task>
+    <task id="LOCAL-00106" summary="XMU RollCall Bot">
+      <option name="closed" value="true" />
+      <created>1763173017443</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1763173017443</updated>
+    </task>
+    <task id="LOCAL-00107" summary="XMU RollCall Bot">
+      <option name="closed" value="true" />
+      <created>1763175546829</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1763175546829</updated>
+    </task>
+    <task id="LOCAL-00108" summary="XMU RollCall Bot">
+      <option name="closed" value="true" />
+      <created>1763176026747</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1763176026747</updated>
+    </task>
+    <task id="LOCAL-00109" summary="XMU RollCall Bot">
+      <option name="closed" value="true" />
+      <created>1763192366291</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1763192366291</updated>
+    </task>
+    <task id="LOCAL-00110" summary="XMU RollCall Bot">
+      <option name="closed" value="true" />
+      <created>1763192950950</created>
+      <option name="number" value="00110" />
+      <option name="presentableId" value="LOCAL-00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1763192950956</updated>
+    </task>
+    <task id="LOCAL-00111" summary="XMU RollCall Bot">
+      <option name="closed" value="true" />
+      <created>1763194807004</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1763194807004</updated>
+    </task>
+    <task id="LOCAL-00112" summary="XMU RollCall Bot">
+      <option name="closed" value="true" />
+      <created>1763194874538</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1763194874538</updated>
+    </task>
+    <task id="LOCAL-00113" summary="XMU RollCall Bot">
+      <option name="closed" value="true" />
+      <created>1763280185849</created>
+      <option name="number" value="00113" />
+      <option name="presentableId" value="LOCAL-00113" />
+      <option name="project" value="LOCAL" />
+      <updated>1763280185856</updated>
+    </task>
+    <option name="localTasksCounter" value="114" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="XMU RollCall Bot" />
