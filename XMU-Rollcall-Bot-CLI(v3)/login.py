@@ -78,5 +78,4 @@ def login():
 #     time1 = time.time()
 #     s = login()
 #     time2 = time.time()
-#     if s: print(s.get("https://lnt.xmu.edu.cn/api/radar/rollcalls", headers=headers).text)
 #     print(f"Login time: {time2 - time1:.2f} seconds")

@@ -74,9 +74,9 @@ def p(data, session):
     return answer_status
 
 def t(name):
-    if time.localtime().tm_hour < 12 & time.localtime().tm_hour >= 5:
+    if time.localtime().tm_hour < 12 and time.localtime().tm_hour >= 5:
         greeting = "Good morning"
-    elif time.localtime().tm_hour < 18:
+    elif time.localtime().tm_hour < 18 and time.localtime().tm_hour >= 12:
         greeting = "Good afternoon"
     else:
         greeting = "Good evening"
