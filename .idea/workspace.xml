@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9b947822-5d45-45a5-94ad-c3c590bc4532" name="更改" comment="XMU RollCall Bot">
-      <change beforePath="$PROJECT_DIR$/XMUrcbot_win/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/XMUrcbot_win/aiohttp.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/XMUrcbot_win/config.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/XMUrcbot_win/main.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/XMUrcbot_win/main_gui.zip" beforeDir="false" />
-    </list>
+    <list default="true" id="9b947822-5d45-45a5-94ad-c3c590bc4532" name="更改" comment="XMU RollCall Bot" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -216,15 +210,7 @@
       <workItem from="1763121078407" duration="24000" />
       <workItem from="1763125920303" duration="10942000" />
       <workItem from="1763220499391" duration="2000" />
-      <workItem from="1763220511196" duration="13323000" />
-    </task>
-    <task id="LOCAL-00066" summary="XMU RollCall Bot">
-      <option name="closed" value="true" />
-      <created>1762772581746</created>
-      <option name="number" value="00066" />
-      <option name="presentableId" value="LOCAL-00066" />
-      <option name="project" value="LOCAL" />
-      <updated>1762772581746</updated>
+      <workItem from="1763220511196" duration="13628000" />
     </task>
     <task id="LOCAL-00067" summary="XMU RollCall Bot">
       <option name="closed" value="true" />
@@ -610,7 +596,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763280473258</updated>
     </task>
-    <option name="localTasksCounter" value="115" />
+    <task id="LOCAL-00115" summary="XMU RollCall Bot">
+      <option name="closed" value="true" />
+      <created>1763288613011</created>
+      <option name="number" value="00115" />
+      <option name="presentableId" value="LOCAL-00115" />
+      <option name="project" value="LOCAL" />
+      <updated>1763288613011</updated>
+    </task>
+    <option name="localTasksCounter" value="116" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
