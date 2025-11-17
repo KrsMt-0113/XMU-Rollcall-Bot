@@ -1,4 +1,4 @@
-import uuid, requests, time, asyncio, aiohttp, os
+import uuid, requests, time, asyncio, aiohttp, os, sys
 
 base_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 file_path = os.path.join(base_dir, "info.txt")
