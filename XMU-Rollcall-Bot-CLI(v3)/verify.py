@@ -13,7 +13,7 @@ headers = {
 with open(file_path, "r", encoding="utf-8") as f:
     lines = f.readlines()
     LATITUDE = lines[2].strip()
-    LONGTITUDE = lines[3].strip()
+    LONGITUDE = lines[3].strip()
 
 def pad(i):
     return str(i).zfill(4)
@@ -81,7 +81,7 @@ def send_radar(in_session, rollcall_id):
         "deviceId": str(uuid.uuid4()),
         "heading": None,
         "latitude": LATITUDE,
-        "longitude": LONGTITUDE,
+        "longitude": LONGITUDE,
         "speed": None
     }
     res = requests.put(url, json=payload, headers=headers, cookies=in_session.cookies)
