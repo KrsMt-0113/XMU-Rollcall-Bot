@@ -1,4 +1,0 @@
-testuser
-testpass
-24.5
-118.1
