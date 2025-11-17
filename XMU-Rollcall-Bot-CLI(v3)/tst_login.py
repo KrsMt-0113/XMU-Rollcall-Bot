@@ -83,7 +83,7 @@ async def login():
                 if response.status == 200:
                     # Return a new session with cookies from the login process
                     # Create a new session that preserves cookies
-                    new_session = aiohttp.ClientSession(cookies=session.cookie_jar)
+                    new_session = aiohttp.ClientSession(cookie_jar=session.cookie_jar)
                     return new_session
                 else:
                     return None
