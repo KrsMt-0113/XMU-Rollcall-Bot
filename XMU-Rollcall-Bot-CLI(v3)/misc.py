@@ -1,9 +1,9 @@
-import os, time
-from verify import send_code, send_radar
+import os, time, asyncio
+from verify import send_code_async, send_radar_async
 
-def a(data, session):
+async def a(data, session):
     data_empty = {'rollcalls': []}
-    result = p(data, session)
+    result = await p(data, session)
     if False in result: return data_empty
     else: return data
 
@@ -38,7 +38,7 @@ def d(data):
         rollcall_count = 0
     return rollcall_count, result
 
-def p(data, session):
+async def p(data, session):
     count, rollcalls = d(data)
     answer_status = [False for _ in range(count)]
     if count:
@@ -54,7 +54,7 @@ def p(data, session):
                 temp_str = "QRcode rollcall"
             print(f"rollcall type：{temp_str}\n")
             if (rollcalls[i]['status'] == 'absent') & (rollcalls[i]['is_number']) & (not rollcalls[i]['is_radar']):
-                if send_code(session, rollcalls[i]['rollcall_id']):
+                if await send_code_async(session, rollcalls[i]['rollcall_id']):
                     answer_status[i] = True
                 else:
                     print("Answering failed.")
@@ -62,7 +62,7 @@ def p(data, session):
                 print("Already answered.")
                 answer_status[i] = True
             elif rollcalls[i]['is_radar']:
-                if send_radar(session, rollcalls[i]['rollcall_id']):
+                if await send_radar_async(session, rollcalls[i]['rollcall_id']):
                     answer_status[i] = True
                 else:
                     print("Answering failed.")

@@ -2,3 +2,6 @@
 /.venv/
 /.idea/
 XMU-Rollcall-Bot-CLI(v3)/info.txt
+__pycache__/
+*.pyc
+*.pyo
