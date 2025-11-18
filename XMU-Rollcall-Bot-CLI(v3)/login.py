@@ -1,4 +1,5 @@
-import requests, base64, random, re, time, json, os, sys
+# 旧版登录: 不走 Tronclass 的service，直接登录统一身份认证
+import requests, base64, random, re, time, os, sys
 from Crypto.Cipher import AES
 from misc import c
 
