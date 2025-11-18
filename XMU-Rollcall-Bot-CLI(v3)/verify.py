@@ -43,7 +43,7 @@ async def send_code_async(in_session, rollcall_id):
     timeout = aiohttp.ClientTimeout(total=5)
     # in_session is already an aiohttp session, so we can use it directly
     # Create a new session that shares the same cookies
-    async with aiohttp.ClientSession(cookies=in_session.cookie_jar) as session:
+    async with aiohttp.ClientSession(cookie_jar=in_session.cookie_jar) as session:
         tasks = [asyncio.create_task(put_request(i, session, stop_flag, url, sem, timeout)) for i in range(10000)]
         try:
             for coro in asyncio.as_completed(tasks):
@@ -53,7 +53,7 @@ async def send_code_async(in_session, rollcall_id):
                         if not t.done():
                             t.cancel()
                     print("Number code rollcall answered successfully.\nNumber code: ", res)
-                    time.sleep(5)
+                    await asyncio.sleep(5)
                     t01 = time.time()
                     print("Time: %.2f s." % (t01 - t00))
                     return True
@@ -70,10 +70,10 @@ async def send_code_async(in_session, rollcall_id):
 def send_code(in_session, rollcall_id):
     """Wrapper for backward compatibility - detects if in async context"""
     try:
-        loop = asyncio.get_running_loop()
+        asyncio.get_running_loop()
         # We're in an async context, so we can't use asyncio.run()
         # This should be called with await send_code_async() instead
-        raise RuntimeError("send_code should not be called from async context. Use await send_code_async() instead.")
+        raise RuntimeError("send_code() is deprecated and should not be called from an async context. Please use await send_code_async() directly.")
     except RuntimeError as e:
         if "no running event loop" in str(e).lower():
             # Not in async context, safe to use asyncio.run()
@@ -103,10 +103,10 @@ async def send_radar_async(in_session, rollcall_id):
 def send_radar(in_session, rollcall_id):
     """Wrapper for backward compatibility - detects if in async context"""
     try:
-        loop = asyncio.get_running_loop()
+        asyncio.get_running_loop()
         # We're in an async context, so we can't use asyncio.run()
         # This should be called with await send_radar_async() instead
-        raise RuntimeError("send_radar should not be called from async context. Use await send_radar_async() instead.")
+        raise RuntimeError("send_radar() is deprecated and should not be called from an async context. Please use await send_radar_async() directly.")
     except RuntimeError as e:
         if "no running event loop" in str(e).lower():
             # Not in async context, safe to use asyncio.run()

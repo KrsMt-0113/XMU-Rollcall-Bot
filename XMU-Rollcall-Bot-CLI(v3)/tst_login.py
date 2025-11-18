@@ -17,7 +17,9 @@ async def login():
         "redirect_uri": "https://c-mobile.xmu.edu.cn/identity-web-login-callback?_h5=true"
     }
     try:
-        async with aiohttp.ClientSession() as session:
+        # Create session outside the context manager to return it
+        session = aiohttp.ClientSession()
+        try:
             # First request: GET with params, don't follow redirects
             async with session.get(url, headers=headers, params=params, allow_redirects=False) as response:
                 location = response.headers['location']
@@ -81,12 +83,16 @@ async def login():
             # Final request: POST to login with access token
             async with session.post(url_3, json=data) as response:
                 if response.status == 200:
-                    # Return a new session with cookies from the login process
-                    # Create a new session that preserves cookies
-                    new_session = aiohttp.ClientSession(cookie_jar=session.cookie_jar)
-                    return new_session
+                    # Return session with cookies from the login process
+                    # Caller is responsible for closing the session
+                    return session
                 else:
+                    await session.close()
                     return None
+        except Exception as e:
+            # Close session on error
+            await session.close()
+            raise
     except Exception as e:
         print("Login failed:", e)
         return None

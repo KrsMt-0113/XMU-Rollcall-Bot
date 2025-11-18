@@ -1,4 +1,4 @@
-import os, time, asyncio
+import os, time
 from verify import send_code_async, send_radar_async
 
 async def a(data, session):
