@@ -16,6 +16,7 @@
     <img src="XMU-Rollcall-Bot-CLI(v3)/screenshot.png" width="500">
 </div>
 
+
 > 为了进一步方便大家对厦门大学网站的各种开发，我制作了 `xmulogin` 包，大家可以直接 `pip install xmulogin` 使用。该包目前支持统一身份认证登录、教务系统登录和数字化教学平台登录。用法如下：
 > 
 > ```python
