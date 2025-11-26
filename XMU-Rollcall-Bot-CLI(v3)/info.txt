@@ -1,4 +1,0 @@
-username
-password
-24.4378
-118.0965
