@@ -3,8 +3,17 @@ from aiohttp import CookieJar
 
 base_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 file_path = os.path.join(base_dir, "info.txt")
-
 base_url = "https://lnt.xmu.edu.cn"
+headers = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/120.0.0.0 Safari/537.36"
+    ),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Referer": "https://ids.xmu.edu.cn/authserver/login",
+}
 
 with open(file_path, "r", encoding="utf-8") as f:
     lines = f.readlines()
@@ -83,7 +92,7 @@ def send_radar(in_session, rollcall_id):
         "longitude": LONGITUDE,
         "speed": None
     }
-    res = in_session.put(url, json=payload)
+    res = in_session.put(url, json=payload, headers=headers)
     if res.status_code == 200:
         print("Radar rollcall answered successfully.")
         return True
