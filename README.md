@@ -1,5 +1,7 @@
 # `XMU Rollcall Bot v3.0.1`
 
+![XMU-Rollcall-Bot](https://socialify.git.ci/KrsMt-0113/XMU-Rollcall-Bot/image?font=JetBrains+Mono&forks=1&language=1&name=1&owner=1&pattern=Plus&stargazers=1&theme=Light)
+
 ![author](https://img.shields.io/badge/XMU-KrsMt--0113-orange
 )
 ![Downloads](https://img.shields.io/github/downloads/KrsMt-0113/XMU-Rollcall-Bot/total.svg)
