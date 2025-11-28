@@ -1,10 +1,13 @@
 ![XMU-Rollcall-Bot](https://socialify.git.ci/KrsMt-0113/XMU-Rollcall-Bot/image?font=JetBrains+Mono&forks=1&language=1&name=1&owner=1&pattern=Plus&stargazers=1&theme=Light)
 
-![Downloads](https://img.shields.io/github/downloads/KrsMt-0113/XMU-Rollcall-Bot/total.svg)
-![files](https://img.shields.io/github/directory-file-count/KrsMt-0113/XMU-Rollcall-Bot
-)
-![code_size](https://img.shields.io/github/languages/code-size/KrsMt-0113/XMU-Rollcall-Bot
-)
+
+<div align="center">
+
+  <img src="https://img.shields.io/github/downloads/KrsMt-0113/XMU-Rollcall-Bot/total.svg" />
+  <img src="https://img.shields.io/github/directory-file-count/KrsMt-0113/XMU-Rollcall-Bot" />
+  <img src="https://img.shields.io/github/languages/code-size/KrsMt-0113/XMU-Rollcall-Bot" />
+
+</div>
 
 ![Alt](https://repobeats.axiom.co/api/embed/6255c96e9f98ddf08155c6da04a9559213ba168d.svg "Repobeats analytics image")
 
