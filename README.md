@@ -24,8 +24,6 @@
 </div>
 
 
-> **[下载工具](https://github.com/KrsMt-0113/XMU-Rollcall-Bot/releases)**
->
 > **[移植文档](docs/transplant.md)**
 > 
 > **[更新日志](docs/ChangeLog.md)**
