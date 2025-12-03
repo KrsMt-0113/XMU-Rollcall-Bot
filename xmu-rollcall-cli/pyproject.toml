@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "xmu-rollcall-cli"
-version = "3.1.3"
+version = "3.1.4"
 description = "XMU Rollcall Bot CLI - Automated rollcall monitoring and answering for Xiamen University Tronclass"
 readme = "README.md"
 requires-python = ">=3.7"
