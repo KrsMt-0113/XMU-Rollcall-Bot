@@ -39,8 +39,8 @@ CONFIG_FILE = CONFIG_DIR / "config.json"
 DEFAULT_CONFIG = {
     "username": "",
     "password": "",
-    "latitude": "",
-    "longitude": ""
+    "latitude": 0.0,
+    "longitude": 0.0
 }
 
 def ensure_config_dir():

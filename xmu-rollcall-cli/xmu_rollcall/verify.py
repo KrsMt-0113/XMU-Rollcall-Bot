@@ -2,6 +2,7 @@ import uuid
 import time
 import asyncio
 import aiohttp
+from aiohttp import CookieJar
 
 base_url = "https://lnt.xmu.edu.cn"
 headers = {
@@ -28,7 +29,6 @@ def pad(i):
     return str(i).zfill(4)
 
 def send_code(in_session, rollcall_id):
-    """发送数字签到码"""
     url = f"{base_url}/api/rollcall/{rollcall_id}/answer_number_rollcall"
     print("Trying number code...")
     t00 = time.time()
@@ -54,34 +54,39 @@ def send_code(in_session, rollcall_id):
 
     async def main():
         stop_flag = asyncio.Event()
-        cookies = {cookie.name: cookie.value for cookie in in_session.cookies}
-        connector = aiohttp.TCPConnector(limit=800)
-        timeout = aiohttp.ClientTimeout(total=30)
-        sem = asyncio.Semaphore(800)
-
-        async with aiohttp.ClientSession(
-            connector=connector,
-            cookies=cookies,
-            headers=headers,
-            timeout=timeout
-        ) as session:
-            tasks = [put_request(i, session, stop_flag, url, sem, timeout) for i in range(10000)]
-            results = await asyncio.gather(*tasks)
-            for result in results:
-                if result:
-                    print(f"Success! Code: {result}, Time elapsed: {time.time() - t00:.2f}s")
-                    return True
+        sem = asyncio.Semaphore(200)
+        timeout = aiohttp.ClientTimeout(total=5)
+        cookie_jar = CookieJar()
+        for c in in_session.cookies:
+            cookie_jar.update_cookies({c.name: c.value})
+        async with aiohttp.ClientSession(headers=in_session.headers, cookie_jar=cookie_jar) as session:
+            tasks = [asyncio.create_task(put_request(i, session, stop_flag, url, sem, timeout)) for i in range(10000)]
+            try:
+                for coro in asyncio.as_completed(tasks):
+                    res = await coro
+                    if res is not None:
+                        for t in tasks:
+                            if not t.done():
+                                t.cancel()
+                        print("Number code rollcall answered successfully.\nNumber code: ", res)
+                        time.sleep(5)
+                        t01 = time.time()
+                        print("Time: %.2f s." % (t01 - t00))
+                        return True
+            finally:
+                # 确保所有 task 结束
+                for t in tasks:
+                    if not t.done():
+                        t.cancel()
+                await asyncio.gather(*tasks, return_exceptions=True)
+        t01 = time.time()
+        print("Failed.\nTime: %.2f s." % (t01 - t00))
         return False
 
-    try:
-        return asyncio.run(main())
-    except Exception as e:
-        print(f"Error in send_code: {e}")
-        return False
+    return asyncio.run(main())
 
 def send_radar(in_session, rollcall_id):
-    """发送雷达签到"""
-    url = f"{base_url}/api/rollcall/{rollcall_id}/answer_radar_rollcall"
+    url = f"{base_url}/api/rollcall/{rollcall_id}/answer?api_version=1.76"
     print("Trying radar rollcall...")
 
     payload = {
@@ -106,4 +111,3 @@ def send_radar(in_session, rollcall_id):
     except Exception as e:
         print(f"Error in send_radar: {e}")
         return False
-

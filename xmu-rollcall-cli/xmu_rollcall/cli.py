@@ -53,12 +53,14 @@ def config():
                            show_default=True if current_config.get('password') else False)
 
     latitude = click.prompt(f"{Colors.BOLD}Latitude{Colors.ENDC}",
-                           default=current_config.get('latitude', ''),
-                           show_default=True if current_config.get('latitude') else False)
+                            default=current_config.get('latitude', ''),
+                            show_default=True if current_config.get('latitude') else False,
+                            type=float)
 
     longitude = click.prompt(f"{Colors.BOLD}Longitude{Colors.ENDC}",
-                            default=current_config.get('longitude', ''),
-                            show_default=True if current_config.get('longitude') else False)
+                             default=current_config.get('longitude', ''),
+                             show_default=True if current_config.get('longitude') else False,
+                             type=float)
 
     # 验证登录
     click.echo(f"\n{Colors.OKCYAN}Validating credentials...{Colors.ENDC}")
