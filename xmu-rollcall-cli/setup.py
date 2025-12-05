@@ -7,7 +7,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="xmu-rollcall-cli",
-    version="3.1.4",
+    version="3.1.5",
     packages=find_packages(),
     include_package_data=True,
 
@@ -37,6 +37,8 @@ setup(
     entry_points={
         "console_scripts": [
             "XMUrollcall-cli=xmu_rollcall.cli:cli",
+            "xmu-rollcall-cli=xmu_rollcall.cli:cli",
+            "xmu=xmu_rollcall.cli:cli",
         ],
     },
 

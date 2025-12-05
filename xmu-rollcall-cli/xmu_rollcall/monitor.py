@@ -7,7 +7,6 @@ import re
 from xmulogin import xmulogin
 from .utils import clear_screen, save_session, load_session, verify_session
 from .rollcall_handler import process_rollcalls
-from .verify import set_location
 from .config import get_cookies_path
 
 base_url = "https://lnt.xmu.edu.cn"
@@ -201,17 +200,19 @@ def update_footer_text():
     sys.stdout.write("\033[?25h")
     sys.stdout.flush()
 
-def start_monitor(config):
+def start_monitor(account):
     """启动监控程序"""
-    USERNAME = config['username']
-    PASSWORD = config['password']
-    LATITUDE = config['latitude']
-    LONGITUDE = config['longitude']
+    USERNAME = account['username']
+    PASSWORD = account['password']
+    ACCOUNT_ID = account.get('id', 1)
+    ACCOUNT_NAME = account.get('name', '')
+    # LATITUDE = account.get('latitude', 0)
+    # LONGITUDE = account.get('longitude', 0)
 
     # 设置全局位置信息
-    set_location(LATITUDE, LONGITUDE)
+    # set_location(LATITUDE, LONGITUDE)
 
-    cookies_path = get_cookies_path()
+    cookies_path = get_cookies_path(ACCOUNT_ID)
     rollcalls_url = f"{base_url}/api/radar/rollcalls"
     session = None
 
@@ -249,9 +250,9 @@ def start_monitor(config):
             sys.exit(1)
 
     print(f"{Colors.OKCYAN}[Step 3/3]{Colors.ENDC} Fetching user profile...")
-    profile = session.get(f"{base_url}/api/profile", headers=headers).json()
-    name = profile["name"]
-    print_login_status(f"Welcome, {name}", True)
+    # profile = session.get(f"{base_url}/api/profile", headers=headers).json()
+    # name = profile["name"]
+    print_login_status(f"Welcome, {ACCOUNT_NAME}", True)
 
     print(f"\n{Colors.OKGREEN}{Colors.BOLD}Initialization complete{Colors.ENDC}")
     print(f"\n{Colors.GRAY}Starting monitor in 3 seconds...{Colors.ENDC}")
@@ -262,7 +263,7 @@ def start_monitor(config):
     query_count = 0
     start_time = time.time()
 
-    print_dashboard(name, start_time, query_count, 0, show_banner=False)
+    print_dashboard(ACCOUNT_NAME, start_time, query_count, 0, show_banner=False)
 
     footer_initialized = False
     _last_query_time = 0
@@ -309,7 +310,7 @@ def start_monitor(config):
                                 time.sleep(3)
                             except KeyboardInterrupt:
                                 raise
-                            print_dashboard(name, start_time, query_count, 0)
+                            print_dashboard(ACCOUNT_NAME, start_time, query_count, 0)
             except KeyboardInterrupt:
                 raise
             except Exception as e:

@@ -67,7 +67,7 @@ def handle_rollcalls(data, session):
                     print("Answering failed.")
             else:
                 # TODO: qrcode rollcall
-                print("Answering failed.")
+                print("Answering failed. QRcode rollcall not supported yet.")
 
     return answer_status
 
