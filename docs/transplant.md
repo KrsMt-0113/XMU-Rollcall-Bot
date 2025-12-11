@@ -1,17 +1,21 @@
 # 移植文档
 
-前往 [该文件夹](XMU-Rollcall-Bot-CLI(v3)) 下载本工具的最新版本源代码。
+前往 [该文件夹](../xmu-rollcall-cli) 下载本工具的最新版本源代码。
 
 结构说明:
 ```aiignore
-- main.py          # 主程序入口
-- login.py         # 登录模块
-- misc.py          # 其他辅助功能
-- verify.py        # 签到模块
-- info.txt         # 配置文件，填写账号、密码、纬度、经度
-- requirements.txt # 依赖列表
+- cli.py               # 命令行入口
+- config.py            # 配置文件读取与写入
+- monitor.py           # 监控主循环
+- rollcall_handler.py  # 签到处理逻辑
+- utils.py             # 工具函数
+- verify.py            # 签到执行逻辑
 ```
 
-1. 请根据具体情况修改 `login.py`,以适配不同学校的登录方式；
+1. 登录方面采用适用于厦门大学的统一身份认证方式即 `xmulogin` 库，请为自己学校重新编写。
 
-2. 请修改 `main.py` 与 `verify.py` 中的 `base_url` 变量，以适配不同学校的 Tronclass 平台。
+2. 如需上传至PyPI，请修改相关信息，包括作者、README、包名称、版本号等。
+
+3. 如需打包为可执行文件，请前往 [这里](../legacy/v3.0.1) 下载代码并使用 `PyInstaller` 打包。
+
+4. 请修改所有代码中的 `base_url`。

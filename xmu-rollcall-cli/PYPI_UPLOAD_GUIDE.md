@@ -42,7 +42,7 @@ repository = https://test.pypi.org/legacy/
 ### 步骤 1: 清理旧的构建文件
 
 ```bash
-cd IdeaProjects/Comet/xmu-rollcall-cli
+cd ~/IdeaProjects/Comet/xmu-rollcall-cli
 rm -rf build/ dist/ *.egg-info
 ```
 
