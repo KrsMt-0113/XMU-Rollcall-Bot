@@ -282,28 +282,28 @@ def switch():
 def interval():
     """设置轮询间隔"""
     click.echo(f"\n{Colors.BOLD}{Colors.OKCYAN}=== Set Poll Interval ==={Colors.ENDC}\n")
-    
+
     config_data = load_config()
     current_interval = get_poll_interval(config_data)
-    
+
     click.echo(f"{Colors.BOLD}Current poll interval:{Colors.ENDC} {Colors.OKGREEN}{current_interval} second(s){Colors.ENDC}\n")
-    
+
     # 让用户输入新的轮询间隔
     new_interval = click.prompt(
         f"{Colors.BOLD}Enter new poll interval (in seconds){Colors.ENDC}",
         type=int,
         default=current_interval
     )
-    
+
     # 验证输入
     if new_interval <= 0:
         click.echo(f"{Colors.FAIL}✗ Invalid interval! Must be greater than 0.{Colors.ENDC}")
         sys.exit(1)
-    
+
     # 设置新的轮询间隔
     set_poll_interval(config_data, new_interval)
     save_config(config_data)
-    
+
     click.echo(f"\n{Colors.OKGREEN}✓ Poll interval updated to {new_interval} second(s)!{Colors.ENDC}")
     click.echo(f"{Colors.GRAY}The new interval will take effect on next run of: {Colors.BOLD}xmu start{Colors.ENDC}")
 
