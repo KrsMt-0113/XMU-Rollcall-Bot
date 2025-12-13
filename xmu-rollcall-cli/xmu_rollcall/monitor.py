@@ -7,10 +7,9 @@ import re
 from xmulogin import xmulogin
 from .utils import clear_screen, save_session, load_session, verify_session
 from .rollcall_handler import process_rollcalls
-from .config import get_cookies_path
+from .config import get_cookies_path, load_config, get_poll_interval
 
 base_url = "https://lnt.xmu.edu.cn"
-interval = 1
 headers = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -208,6 +207,10 @@ def start_monitor(account):
     ACCOUNT_NAME = account.get('name', '')
     # LATITUDE = account.get('latitude', 0)
     # LONGITUDE = account.get('longitude', 0)
+
+        # 获取轮询间隔
+    config_data = load_config()
+    interval = get_poll_interval(config_data)
 
     # 设置全局位置信息
     # set_location(LATITUDE, LONGITUDE)
