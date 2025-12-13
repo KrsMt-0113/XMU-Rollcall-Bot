@@ -39,6 +39,7 @@ CONFIG_FILE = CONFIG_DIR / "config.json"
 DEFAULT_CONFIG = {
     "accounts": [],
     "current_account_id": None
+        "poll_interval": 1
 }
 
 DEFAULT_ACCOUNT = {
@@ -226,4 +227,12 @@ def perform_account_deletion(cookies_to_delete, cookies_to_rename):
             if os.path.exists(new_path):
                 os.remove(new_path)
             os.rename(old_path, new_path)
+
+def get_poll_interval(config):
+    """获取轮询间隔（秒）"""
+    return config.get("poll_interval", 1)
+
+def set_poll_interval(config, interval):
+    """设置轮询间隔（秒）"""
+    config["poll_interval"] = interval
 
