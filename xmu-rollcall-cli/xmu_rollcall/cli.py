@@ -31,7 +31,7 @@ def cli(ctx):
         click.echo(f"  xmu switch    Switch between accounts")
         click.echo(f"  xmu start     Start monitoring rollcalls")
         click.echo(f"  xmu refresh   Refresh the login status")
-                click.echo(f"  xmu interval     Set poll interval for monitoring")
+        click.echo(f"  xmu interval  Set poll interval for monitoring")
         click.echo(f"  xmu --help    Show this message")
 
 @cli.command()
@@ -255,6 +255,9 @@ def switch():
     for acc in accounts:
         current_marker = f" {Colors.OKGREEN}(current){Colors.ENDC}" if acc.get("id") == current_id else ""
         click.echo(f"  {acc.get('id')}: {acc.get('name') or acc.get('username')}{current_marker}")
+
+    click.echo()
+
     # 让用户选择账号
     valid_ids = [str(acc.get("id")) for acc in accounts]
     selected_id = click.prompt(

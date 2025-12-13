@@ -38,8 +38,8 @@ CONFIG_FILE = CONFIG_DIR / "config.json"
 
 DEFAULT_CONFIG = {
     "accounts": [],
-    "current_account_id": None
-        "poll_interval": 1
+    "current_account_id": None,
+    "poll_interval": 1
 }
 
 DEFAULT_ACCOUNT = {
