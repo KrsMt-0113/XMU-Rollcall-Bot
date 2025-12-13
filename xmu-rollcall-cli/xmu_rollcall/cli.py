@@ -4,7 +4,8 @@ from xmulogin import xmulogin
 from .config import (
     load_config, save_config, is_config_complete, get_cookies_path,
     add_account, get_all_accounts, get_current_account, set_current_account,
-    get_account_by_id, CONFIG_FILE, delete_account, perform_account_deletion
+    get_account_by_id, CONFIG_FILE, delete_account, perform_account_deletion,
+    get_poll_interval, set_poll_interval
 )
 from .monitor import start_monitor, base_url, headers
 
@@ -30,6 +31,7 @@ def cli(ctx):
         click.echo(f"  xmu switch    Switch between accounts")
         click.echo(f"  xmu start     Start monitoring rollcalls")
         click.echo(f"  xmu refresh   Refresh the login status")
+                click.echo(f"  xmu interval     Set poll interval for monitoring")
         click.echo(f"  xmu --help    Show this message")
 
 @cli.command()
@@ -253,9 +255,6 @@ def switch():
     for acc in accounts:
         current_marker = f" {Colors.OKGREEN}(current){Colors.ENDC}" if acc.get("id") == current_id else ""
         click.echo(f"  {acc.get('id')}: {acc.get('name') or acc.get('username')}{current_marker}")
-
-    click.echo()
-
     # 让用户选择账号
     valid_ids = [str(acc.get("id")) for acc in accounts]
     selected_id = click.prompt(
@@ -274,6 +273,36 @@ def switch():
     else:
         click.echo(f"{Colors.FAIL}✗ Account not found!{Colors.ENDC}")
         sys.exit(1)
+
+
+@cli.command()
+def interval():
+    """设置轮询间隔"""
+    click.echo(f"\n{Colors.BOLD}{Colors.OKCYAN}=== Set Poll Interval ==={Colors.ENDC}\n")
+    
+    config_data = load_config()
+    current_interval = get_poll_interval(config_data)
+    
+    click.echo(f"{Colors.BOLD}Current poll interval:{Colors.ENDC} {Colors.OKGREEN}{current_interval} second(s){Colors.ENDC}\n")
+    
+    # 让用户输入新的轮询间隔
+    new_interval = click.prompt(
+        f"{Colors.BOLD}Enter new poll interval (in seconds){Colors.ENDC}",
+        type=int,
+        default=current_interval
+    )
+    
+    # 验证输入
+    if new_interval <= 0:
+        click.echo(f"{Colors.FAIL}✗ Invalid interval! Must be greater than 0.{Colors.ENDC}")
+        sys.exit(1)
+    
+    # 设置新的轮询间隔
+    set_poll_interval(config_data, new_interval)
+    save_config(config_data)
+    
+    click.echo(f"\n{Colors.OKGREEN}✓ Poll interval updated to {new_interval} second(s)!{Colors.ENDC}")
+    click.echo(f"{Colors.GRAY}The new interval will take effect on next run of: {Colors.BOLD}xmu start{Colors.ENDC}")
 
 
 if __name__ == '__main__':
