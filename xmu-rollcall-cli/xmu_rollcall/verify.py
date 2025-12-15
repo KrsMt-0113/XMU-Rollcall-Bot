@@ -66,7 +66,6 @@ def send_code(in_session, rollcall_id):
                         print("Time: %.2f s." % (t01 - t00))
                         return True
             finally:
-                # 确保所有 task 结束
                 for t in tasks:
                     if not t.done():
                         t.cancel()
@@ -76,33 +75,6 @@ def send_code(in_session, rollcall_id):
         return False
 
     return asyncio.run(main())
-
-# def send_radar(in_session, rollcall_id):
-#     url = f"{base_url}/api/rollcall/{rollcall_id}/answer?api_version=1.76"
-#     print("Trying radar rollcall...")
-#
-#     payload = {
-#         "accuracy": 35,
-#         "altitude": 0,
-#         "altitudeAccuracy": None,
-#         "deviceId": str(uuid.uuid4()),
-#         "heading": None,
-#         "latitude": LATITUDE,
-#         "longitude": LONGITUDE,
-#         "speed": None
-#     }
-#
-#     try:
-#         response = in_session.put(url, json=payload, headers=headers)
-#         if response.status_code == 200:
-#             print("Radar rollcall success!")
-#             return True
-#         else:
-#             print(f"Radar rollcall failed with status code: {response.status_code}")
-#             return False
-#     except Exception as e:
-#         print(f"Error in send_radar: {e}")
-#         return False
 
 def send_radar(in_session, rollcall_id):
     url = f"{base_url}/api/rollcall/{rollcall_id}/answer"
@@ -126,15 +98,12 @@ def send_radar(in_session, rollcall_id):
     data_1 = res_1.json()
     res_2 = in_session.put(url, json=payload(lat_2, lon_2), headers=headers)
     data_2 = res_2.json()
-    distance_1 = data_1["distance"]
-    distance_2 = data_2["distance"]
-
-    print(data_1, data_2)  # debug
 
     if res_1.status_code == 200 or res_2.status_code == 200:
-        # print("[Debug] 预设位置签到成功。")  # debug
-        # time.sleep(10)
         return True
+
+    distance_1 = data_1.get("distance")
+    distance_2 = data_2.get("distance")
 
     def latlon_to_xy(lat, lon, lat0, lon0):
         R = 6371000
@@ -184,10 +153,7 @@ def send_radar(in_session, rollcall_id):
     resolutions = solve_two_points(lat_1, lon_1, lat_2, lon_2, distance_1, distance_2)
     if resolutions:
         ((sol_x_1, sol_y_1), (sol_x_2, sol_y_2)) = resolutions
-        # print(f"[Debug] 解方程得到：{resolutions}")  # debug
     else:
-        # print("[Debug] 无解。")   # debug
-        # time.sleep(10)  # debug
         return False
 
     payload_1 = payload(sol_x_1, sol_y_1)
@@ -195,20 +161,11 @@ def send_radar(in_session, rollcall_id):
 
     res_3 = in_session.put(url, json=payload_1, headers=headers)
     if res_3.status_code == 200:
-        # print(f"[Debug] 解 1 签到成功。对应经纬度：{sol_x_1, sol_y_1}")  # debug
-        # print(res_3.json())  # debug
-        # time.sleep(10)  # debug
         return True
     else:
         print(res_3.json())
         res_4 = in_session.put(url, json=payload_2, headers=headers)
         if res_4.status_code == 200:
-            # print(f"[Debug] 解 2 签到成功。对应经纬度：{sol_x_2, sol_y_2}")  # debug
-            # print(res_4.json())  # debug
-            # time.sleep(10)  # debug
             return True
-    # print(res_4.json())  # debug
 
-    # print("[Debug] 失败了。")  # debug
-    # time.sleep(10)  # debug
     return False

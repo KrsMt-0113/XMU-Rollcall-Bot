@@ -75,7 +75,7 @@ def print_banner():
     line = '=' * width
 
     title1 = "XMU Rollcall Bot CLI"
-    title2 = "Version 3.1.5"
+    title2 = "Version 3.1.6"
 
     print(f"{Colors.OKCYAN}{line}{Colors.ENDC}")
     print(center_text(f"{Colors.BOLD}{title1}{Colors.ENDC}"))
