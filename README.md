@@ -12,10 +12,6 @@
 
 </div>
 
-<div align="center">
-    <img src="https://api.star-history.com/svg?repos=KrsMt-0113/XMU-Rollcall-Bot&type=date&legend=top-left">
-</div>
-
 
 > **[移植文档](docs/transplant.md)**
 > 
