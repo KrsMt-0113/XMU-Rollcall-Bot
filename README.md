@@ -14,12 +14,8 @@
 
 
 > **[移植文档](docs/transplant.md)**
-> 
-> **[更新日志](docs/ChangeLog.md)**
-> 
-> **[在 iOS 运行本项目](https://krsmt.notion.site/mobile-ios)**
-> 
-> **[在 Android 运行本项目](https://krsmt.notion.site/mobile-android)**
+>
+> **[在各操作系统(iOS, Android, Windows, Linux) 运行本项目](https://krsmt.notion.site/cli-doc)**
 >
 > [查询你所在学校/单位的 Tronclass apiUrl](Tronclass-URL-list/result.csv)
 
