@@ -31,6 +31,10 @@ jobs:
       # odd=单周 even=双周 any=不区分
       WEEK_PARITY: "any"
       PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
+      XMU_ROLLCALL_USERNAME: ${{ secrets.XMU_ROLLCALL_USERNAME }}
+      XMU_ROLLCALL_PASSWORD: ${{ secrets.XMU_ROLLCALL_PASSWORD }}
+      # 可选：显示名，如果你的代码用到了 ENV_NAME_VAR
+      XMU_ROLLCALL_NAME: ${{ secrets.XMU_ROLLCALL_NAME }}
 
     steps:
       - name: Checkout
