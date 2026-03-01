@@ -70,4 +70,4 @@ jobs:
           fi
 
           # 20 分钟强制结束
-          micromamba run -n myenv timeout 1200s python auto_sign.py
+          micromamba run -n autosign timeout 120s python auto_sign.py
