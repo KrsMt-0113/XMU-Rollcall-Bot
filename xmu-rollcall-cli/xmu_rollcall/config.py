@@ -2,6 +2,10 @@ import os
 import json
 from pathlib import Path
 
+ENV_USERNAME_VAR = "XMU_ROLLCALL_USERNAME"
+ENV_PASSWORD_VAR = "XMU_ROLLCALL_PASSWORD"
+ENV_NAME_VAR = "XMU_ROLLCALL_NAME"
+
 def get_config_dir():
     """
     获取配置目录路径，支持沙盒环境（如 a-Shell）
@@ -47,6 +51,20 @@ DEFAULT_ACCOUNT = {
     "username": "",
     "password": ""
 }
+
+def get_env_account():
+    """从环境变量构建账号信息，避免写入配置文件"""
+    username = os.environ.get(ENV_USERNAME_VAR)
+    password = os.environ.get(ENV_PASSWORD_VAR)
+    if username and password:
+        return {
+            "id": 0,
+            "name": os.environ.get(ENV_NAME_VAR, username),
+            "username": username,
+            "password": password,
+            "from_env": True,
+        }
+    return None
 
 def ensure_config_dir():
     """确保配置目录存在"""
@@ -116,6 +134,10 @@ def add_account(config, username, password, name):
 
 def get_account_by_id(config, account_id):
     """通过ID获取账号"""
+    if account_id == 0:
+        env_account = get_env_account()
+        if env_account:
+            return env_account
     for acc in config.get("accounts", []):
         if acc.get("id") == account_id:
             return acc
@@ -123,7 +145,13 @@ def get_account_by_id(config, account_id):
 
 def get_current_account(config):
     """获取当前选中的账号"""
+    env_account = get_env_account()
+    accounts = config.get("accounts", [])
     current_id = config.get("current_account_id")
+
+    if env_account and (not accounts or current_id is None or current_id == 0):
+        return env_account
+
     if current_id is None:
         return None
     return get_account_by_id(config, current_id)
@@ -138,6 +166,9 @@ def get_all_accounts(config):
 
 def is_config_complete(config):
     """检查配置是否完整（至少有一个账号且已选择当前账号）"""
+    env_account = get_env_account()
+    if env_account and (not config.get("accounts") or config.get("current_account_id") in (None, 0)):
+        return True
     current_account = get_current_account(config)
     if current_account is None:
         return False
@@ -149,7 +180,11 @@ def get_cookies_path(account_id=None):
     ensure_config_dir()
     if account_id is None:
         config = load_config()
-        account_id = config.get("current_account_id", 1)
+        account = get_current_account(config)
+        if account:
+            account_id = account.get("id", 1)
+        else:
+            account_id = config.get("current_account_id", 1)
     return str(CONFIG_DIR / f"{account_id}.json")
 
 def delete_account(config, account_id):

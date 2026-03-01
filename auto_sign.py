@@ -20,6 +20,7 @@ try:
 		get_account_by_id,
 		get_all_accounts,
 		get_current_account,
+		get_env_account,
 		is_config_complete,
 		load_config,
 		save_config,
@@ -32,6 +33,7 @@ except ModuleNotFoundError:
 		get_account_by_id,
 		get_all_accounts,
 		get_current_account,
+		get_env_account,
 		is_config_complete,
 		load_config,
 		save_config,
@@ -52,7 +54,8 @@ def _print_accounts(accounts: list[dict]) -> None:
 		aid = account.get("id")
 		label = account.get("name") or account.get("username") or "<unnamed>"
 		username = account.get("username", "")
-		print(f"[{aid}] {label} ({_mask_username(username)})")
+		source = " [环境变量]" if account.get("from_env") else ""
+		print(f"[{aid}] {label}{source} ({_mask_username(username)})")
 
 
 def _pick_account(config: dict, account_id: int | None) -> dict | None:
@@ -79,7 +82,10 @@ def main() -> None:
 	args = parser.parse_args()
 
 	config = load_config()
-	accounts = get_all_accounts(config)
+	accounts = list(get_all_accounts(config))
+	env_account = get_env_account()
+	if env_account:
+		accounts.append(env_account)
 
 	if args.list:
 		_print_accounts(accounts)
