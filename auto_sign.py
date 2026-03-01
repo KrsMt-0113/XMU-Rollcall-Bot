@@ -91,9 +91,9 @@ def main() -> None:
 		_print_accounts(accounts)
 		return
 
-	if not accounts:
-		print("No accounts configured. Use the CLI to add credentials first.")
-		sys.exit(1)
+	# if not accounts:
+	# 	print("No accounts configured. Use the CLI to add credentials first.")
+	# 	sys.exit(1)
 
 	account = _pick_account(config, args.account_id)
 	if account is None:

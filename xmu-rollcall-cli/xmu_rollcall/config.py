@@ -56,6 +56,8 @@ def get_env_account():
     """从环境变量构建账号信息，避免写入配置文件"""
     username = os.environ.get(ENV_USERNAME_VAR)
     password = os.environ.get(ENV_PASSWORD_VAR)
+
+    print(f"Checking environment variables for account info: {ENV_USERNAME_VAR}={'set' if username else 'not set'}, {ENV_PASSWORD_VAR}={'set' if password else 'not set'}")
     if username and password:
         return {
             "id": 0,
