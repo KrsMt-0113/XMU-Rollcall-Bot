@@ -105,7 +105,7 @@ def _run_flask(port):
     app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False)
 
 
-def send_qr(in_session, rollcall_id, ngrok_token, session_timeout=SESSION_TIMEOUT):
+def send_qr(in_session, rollcall_id, ngrok_token, session_timeout=SESSION_TIMEOUT, max_retries=3):
     """
     Handle QR code rollcall by starting a local Flask server with ngrok tunnel.
     Returns True if rollcall was answered successfully, False otherwise.
@@ -148,10 +148,12 @@ def send_qr(in_session, rollcall_id, ngrok_token, session_timeout=SESSION_TIMEOU
         else:
             public_base = tunnel.public_url.rstrip("/")
 
-        while True:
+        attempts = 0
+        while attempts < max_retries:
+            attempts += 1
             sid, q = create_session()
             link = f"{public_base}/scan/{sid}"
-            print(f"\n一次性扫码链接（有效期 {session_timeout}s）：")
+            print(f"\n一次性扫码链接（有效期 {session_timeout}s，第 {attempts}/{max_retries} 次尝试）：")
             print(link)
             print("等待扫码并回传数据...")
 
@@ -190,8 +192,11 @@ def send_qr(in_session, rollcall_id, ngrok_token, session_timeout=SESSION_TIMEOU
                         print(res.json())
                     except Exception:
                         pass
-                    # Generate a new link and retry
+                    # Will retry with a new link if attempts remain
                     continue
+
+        print(f"已达到最大重试次数 ({max_retries})，二维码签到失败。")
+        return False
 
     finally:
         try:
