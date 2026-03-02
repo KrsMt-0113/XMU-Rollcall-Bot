@@ -148,14 +148,23 @@ def config():
     while True:
         show_accounts()
 
+        # 显示 ngrok token 配置状态
+        ngrok_token = current_config.get("ngrok_token", "")
+        if ngrok_token:
+            click.echo(f"{Colors.BOLD}Ngrok Token:{Colors.ENDC} {Colors.OKGREEN}Configured{Colors.ENDC}")
+        else:
+            click.echo(f"{Colors.BOLD}Ngrok Token:{Colors.ENDC} {Colors.GRAY}Not configured (required for QR code rollcall){Colors.ENDC}")
+        click.echo()
+
         click.echo(f"{Colors.BOLD}Choose an action:{Colors.ENDC}")
         click.echo(f"  {Colors.OKCYAN}n{Colors.ENDC} - Add new account")
         click.echo(f"  {Colors.OKCYAN}d{Colors.ENDC} - Delete account")
+        click.echo(f"  {Colors.OKCYAN}t{Colors.ENDC} - Configure ngrok token (for QR code rollcall)")
         click.echo(f"  {Colors.OKCYAN}q{Colors.ENDC} - Quit")
 
         action = click.prompt(
             f"\n{Colors.BOLD}Action{Colors.ENDC}",
-            type=click.Choice(['n', 'd', 'q'], case_sensitive=False),
+            type=click.Choice(['n', 'd', 't', 'q'], case_sensitive=False),
             default='q'
         )
 
@@ -165,6 +174,14 @@ def config():
             add_new_account()
         elif action.lower() == 'd':
             delete_existing_account()
+        elif action.lower() == 't':
+            # Configure ngrok token
+            click.echo(f"{Colors.BOLD}Configure ngrok token for QR code rollcall{Colors.ENDC}")
+            click.echo(f"{Colors.GRAY}Get your token at: https://ngrok.com/ -> Your Authtoken{Colors.ENDC}\n")
+            token = click.prompt(f"{Colors.BOLD}Ngrok Token{Colors.ENDC}", default=current_config.get("ngrok_token", ""))
+            current_config["ngrok_token"] = token
+            save_config(current_config)
+            click.echo(f"{Colors.OKGREEN}✓ Ngrok token saved.{Colors.ENDC}\n")
         elif action.lower() == 'q':
             # 退出前显示最终账号列表
             accounts = get_all_accounts(current_config)

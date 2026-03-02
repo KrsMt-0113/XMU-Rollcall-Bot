@@ -10,6 +10,9 @@ setup(
     version="3.1.7",
     packages=find_packages(),
     include_package_data=True,
+    package_data={
+        "xmu_rollcall": ["templates/*.html"],
+    },
 
     # Metadata
     author="KrsMt",
@@ -31,6 +34,8 @@ setup(
         "xmulogin",
         "click>=8.1.0",
         "aiohttp>=3.9.0",
+        "Flask>=3.0.0",
+        "pyngrok>=7.0.0",
     ],
 
     # Entry points

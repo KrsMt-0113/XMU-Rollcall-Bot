@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>XMU Rollcall bot - QRcode Scanner</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 50%, #80deea 100%);
+      color: #01579b;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    h3 {
+      text-align: center;
+      padding: 20px 15px;
+      background: linear-gradient(135deg, #039be5 0%, #0288d1 100%);
+      font-size: 18px;
+      font-weight: 500;
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(3, 155, 229, 0.3);
+      letter-spacing: 1px;
+    }
+    #video-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      padding: 20px;
+      position: relative;
+    }
+    #video-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      aspect-ratio: 1;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(3, 155, 229, 0.25);
+      border: 4px solid #039be5;
+    }
+    #video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    /* 扫描框动画 */
+    .scan-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+    }
+    .scan-line {
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #039be5, #4fc3f7, #039be5, transparent);
+      box-shadow: 0 0 10px #039be5;
+      animation: scan 2s linear infinite;
+    }
+    @keyframes scan {
+      0% { top: 10%; }
+      50% { top: 85%; }
+      100% { top: 10%; }
+    }
+    /* 四角装饰 */
+    .corner {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border-color: #039be5;
+      border-style: solid;
+      border-width: 0;
+    }
+    .corner-tl { top: 10px; left: 10px; border-top-width: 4px; border-left-width: 4px; border-radius: 8px 0 0 0; }
+    .corner-tr { top: 10px; right: 10px; border-top-width: 4px; border-right-width: 4px; border-radius: 0 8px 0 0; }
+    .corner-bl { bottom: 10px; left: 10px; border-bottom-width: 4px; border-left-width: 4px; border-radius: 0 0 0 8px; }
+    .corner-br { bottom: 10px; right: 10px; border-bottom-width: 4px; border-right-width: 4px; border-radius: 0 0 8px 0; }
+    #canvas {
+      display: none;
+    }
+    #msg {
+      text-align: center;
+      padding: 20px 15px;
+      background: linear-gradient(135deg, #039be5 0%, #0288d1 100%);
+      font-size: 16px;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 500;
+      box-shadow: 0 -2px 10px rgba(3, 155, 229, 0.3);
+    }
+    #msg.success {
+      background: linear-gradient(135deg, #43a047 0%, #388e3c 100%);
+    }
+    #msg.error {
+      background: linear-gradient(135deg, #e53935 0%, #d32f2f 100%);
+    }
+    /* 加载动画 */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <h3>📷 对准二维码，识别后自动签到</h3>
+  <div id="video-container">
+    <div id="video-wrapper">
+      <video id="video" autoplay playsinline></video>
+      <div class="scan-overlay">
+        <div class="scan-line"></div>
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+      </div>
+    </div>
+  </div>
+  <canvas id="canvas"></canvas>
+  <p id="msg"><span class="loading"></span>正在启动相机...</p>
+<script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
+<script>
+const sid = "{{ sid }}";
+const submitUrl = "/submit/" + sid;
+const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+const msg = document.getElementById("msg");
+
+async function start() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: "environment",
+        width: { ideal: 1920 },
+        height: { ideal: 1080 }
+      }
+    });
+    video.srcObject = stream;
+    video.setAttribute("playsinline", true);
+    msg.innerHTML = "🔍 请对准二维码扫描";
+    requestAnimationFrame(tick);
+  } catch (e) {
+    msg.innerHTML = "❌ 无法访问相机: " + e.message;
+    msg.classList.add("error");
+  }
+}
+
+function stopCamera() {
+  const s = video.srcObject;
+  if (s) s.getTracks().forEach(t => t.stop());
+}
+
+function tick() {
+  if (video.readyState === video.HAVE_ENOUGH_DATA) {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = jsQR(data.data, data.width, data.height);
+    if (code) {
+      msg.innerHTML = '<span class="loading"></span>已识别，正在提交签到…';
+      stopCamera();
+      fetch(submitUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: code.data })
+      }).then(r=>r.json()).then(j=>{
+        msg.innerHTML = "✅ " + (j.message || "上传完成");
+        msg.classList.add("success");
+      }).catch(e=>{
+        msg.innerHTML = "❌ 上传失败: "+e;
+        msg.classList.add("error");
+      });
+      return;
+    }
+  }
+  requestAnimationFrame(tick);
+}
+
+start();
+</script>
+</body>
+</html>

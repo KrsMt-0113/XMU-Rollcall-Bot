@@ -1,5 +1,7 @@
 import time
 from .verify import send_code, send_radar
+from .qr_handler import send_qr
+from .config import load_config
 
 def process_rollcalls(data, session):
     """处理签到数据"""
@@ -66,8 +68,13 @@ def handle_rollcalls(data, session):
                 else:
                     print("Answering failed.")
             else:
-                # TODO: qrcode rollcall
-                print("Answering failed. QRcode rollcall not supported yet.")
+                # QR code rollcall
+                config_data = load_config()
+                ngrok_token = config_data.get("ngrok_token", "")
+                if send_qr(session, rollcalls[i]['rollcall_id'], ngrok_token):
+                    answer_status[i] = True
+                else:
+                    print("Answering failed.")
 
     return answer_status
 

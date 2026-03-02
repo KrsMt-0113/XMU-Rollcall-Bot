@@ -38,7 +38,8 @@ CONFIG_FILE = CONFIG_DIR / "config.json"
 
 DEFAULT_CONFIG = {
     "accounts": [],
-    "current_account_id": None
+    "current_account_id": None,
+    "ngrok_token": ""
 }
 
 DEFAULT_ACCOUNT = {
