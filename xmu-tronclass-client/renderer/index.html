@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XMU TronClass</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ── Login screen ─────────────────────────────────────────────────────── -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="box-title">XMU TronClass Client</div>
+    <div class="box-body">
+      <div class="field-row">
+        <label>Server</label>
+        <input id="login-base-url" type="text" value="https://lnt.xmu.edu.cn" autocomplete="off" spellcheck="false" />
+      </div>
+      <div class="field-row">
+        <label>Username</label>
+        <input id="login-username" type="text" placeholder="学工号" autocomplete="off" spellcheck="false" />
+      </div>
+      <div class="field-row">
+        <label>Password</label>
+        <input id="login-password" type="password" placeholder="统一身份认证密码" />
+      </div>
+    </div>
+    <div class="box-footer">
+      <div class="login-error" id="login-error"></div>
+      <button class="btn-primary" id="login-btn">LOGIN</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Main app (hidden until logged in) ────────────────────────────────── -->
+<div id="app" style="display:none;">
+
+  <!-- Titlebar -->
+  <div id="titlebar">
+    <div class="left">
+      <span id="app-title">TronClass <span>// XMU</span></span>
+    </div>
+    <div class="right">
+      <div id="user-badge">
+        <span class="dot"></span>
+        <span id="username-display">—</span>
+      </div>
+      <button class="btn-text" id="logout-btn">logout</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div id="tabs">
+    <button class="tab active" data-tab="courses">Courses</button>
+    <button class="tab" data-tab="rollcall">Rollcall <span class="badge" id="rc-badge" style="display:none">0</span></button>
+    <button class="tab" data-tab="notifications">Notifications</button>
+  </div>
+
+  <!-- Content -->
+  <div id="content">
+
+    <!-- Courses -->
+    <div class="view active" id="view-courses">
+      <!-- Course list pane -->
+      <div id="courses-pane">
+        <div class="section-header">
+          <span class="section-title">My Courses</span>
+          <div class="section-actions">
+            <select id="semester-select" style="font-family:var(--font);font-size:11px;padding:3px 6px;border:1px solid var(--border);background:var(--bg);color:var(--fg);cursor:pointer;min-width:140px;">
+              <option value="">Loading semesters…</option>
+            </select>
+            <button class="btn btn-sm" id="courses-refresh">↺ Refresh</button>
+          </div>
+        </div>
+        <ul class="item-list" id="courses-list">
+          <li class="loading"><span class="spinner"></span>Loading…</li>
+        </ul>
+      </div>
+
+      <!-- Course detail pane (hidden by default) -->
+      <div id="course-detail-pane" style="display:none;">
+        <div class="section-header">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button class="btn btn-sm" id="course-back">← Back</button>
+            <span class="section-title" id="course-detail-title">—</span>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-sm" id="course-detail-refresh">↺ Refresh</button>
+          </div>
+        </div>
+        <div id="course-detail-meta" style="padding:8px 16px; border-bottom:1px solid var(--border-dim); font-size:11px; color:var(--dim);"></div>
+
+        <!-- Sub-tabs -->
+        <div style="display:flex; border-bottom:1px solid var(--border);">
+          <button class="detail-tab active" data-detail-tab="activities" style="padding:5px 14px;font-family:var(--font);font-size:11px;border:none;border-right:1px solid var(--border-dim);cursor:pointer;background:none;color:var(--dim);">Activities</button>
+          <button class="detail-tab" data-detail-tab="coursewares" style="padding:5px 14px;font-family:var(--font);font-size:11px;border:none;border-right:1px solid var(--border-dim);cursor:pointer;background:none;color:var(--dim);">Coursewares</button>
+          <button class="detail-tab" data-detail-tab="bulletins" style="padding:5px 14px;font-family:var(--font);font-size:11px;border:none;border-right:1px solid var(--border-dim);cursor:pointer;background:none;color:var(--dim);">Bulletins</button>
+        </div>
+
+        <ul class="item-list" id="course-detail-list">
+          <li class="loading"><span class="spinner"></span>Loading…</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Rollcall -->
+    <div class="view" id="view-rollcall">
+      <div class="section-header">
+        <span class="section-title">Active Rollcalls</span>
+        <div class="section-actions">
+          <button class="btn btn-sm" id="rc-answer-all">✓ Answer All</button>
+          <button class="btn btn-sm" id="rc-refresh">↺ Refresh</button>
+        </div>
+      </div>
+      <ul class="item-list" id="rollcall-list">
+        <li class="loading"><span class="spinner"></span>Loading…</li>
+      </ul>
+
+      <!-- Push event log -->
+      <div class="section-header" style="margin-top:8px;">
+        <span class="section-title">Push Events</span>
+        <button class="btn btn-sm" id="push-events-clear">Clear</button>
+      </div>
+      <ul class="item-list" id="push-event-list">
+        <li class="loading text-dim text-sm" style="padding:12px 16px;">No events yet.</li>
+      </ul>
+    </div>
+
+
+    <!-- Notifications -->
+    <div class="view" id="view-notifications">
+      <div class="section-header">
+        <span class="section-title">Notifications</span>
+        <div class="section-actions">
+          <button class="btn btn-sm" id="ntf-refresh">↺ Refresh</button>
+        </div>
+      </div>
+      <ul class="item-list" id="notifications-list">
+        <li class="loading"><span class="spinner"></span>Loading…</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Status bar -->
+  <div id="statusbar">
+    <div class="left">
+      <div id="push-toggle" title="Toggle push listener">
+        <span id="push-indicator"></span>
+        <span id="push-label">PUSH: OFF</span>
+      </div>
+      <span id="status-msg" class="text-dim"></span>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<!-- Attachments modal -->
+<div id="attach-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center;">
+  <div style="background:#fff;border:1px solid #000;width:520px;max-width:92vw;max-height:72vh;display:flex;flex-direction:column;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #000;">
+      <span id="attach-modal-title" style="font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;margin-right:8px;"></span>
+      <button id="attach-modal-close" style="background:#000;color:#fff;border:none;padding:2px 8px;cursor:pointer;font-family:inherit;font-size:13px;">✕</button>
+    </div>
+    <ul id="attach-modal-list" style="flex:1;overflow-y:auto;margin:0;padding:0;list-style:none;"></ul>
+  </div>
+</div>
+
+<!-- Notification detail modal -->
+<div id="ntf-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center;">
+  <div style="background:#fff;border:1px solid #000;width:92vw;max-height:72vh;display:flex;flex-direction:column;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #000;flex-shrink:0;">
+      <span id="ntf-modal-title" style="font-weight:700;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;margin-right:8px;"></span>
+      <button id="ntf-modal-close" style="background:#000;color:#fff;border:none;padding:2px 8px;cursor:pointer;font-family:inherit;font-size:13px;">✕</button>
+    </div>
+    <pre id="ntf-modal-body" style="flex:1;overflow:auto;margin:0;padding:12px 14px;font-family:var(--font,monospace);font-size:11px;line-height:1.5;white-space:pre-wrap;word-break:break-all;"></pre>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
