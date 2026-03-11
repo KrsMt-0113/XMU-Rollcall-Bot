@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "xmu-rollcall-cli"
-version = "3.2.1"
+version = "3.2.2"
 description = "XMU Rollcall Bot CLI - Automated rollcall monitoring and answering for Xiamen University Tronclass"
 readme = "README.md"
 requires-python = ">=3.7"
@@ -39,8 +39,10 @@ dependencies = [
     "click>=8.1.0",
     "aiohttp>=3.9.0",
     "Flask>=3.0.0",
-    "pyngrok>=7.0.0",
 ]
+
+[project.optional-dependencies]
+qr = ["pyngrok>=7.0.0"]
 
 [project.urls]
 Homepage = "https://github.com/KrsMt-0113/XMU-Rollcall-Bot"

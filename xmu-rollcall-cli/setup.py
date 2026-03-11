@@ -7,7 +7,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="xmu-rollcall-cli",
-    version="3.2.1",
+    version="3.2.2",
     packages=find_packages(),
     include_package_data=True,
     package_data={
@@ -35,8 +35,10 @@ setup(
         "click>=8.1.0",
         "aiohttp>=3.9.0",
         "Flask>=3.0.0",
-        "pyngrok>=7.0.0",
     ],
+    extras_require={
+        "qr": ["pyngrok>=7.0.0"],
+    },
 
     # Entry points
     entry_points={

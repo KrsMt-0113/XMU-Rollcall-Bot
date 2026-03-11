@@ -7,7 +7,12 @@ import os
 from queue import Queue, Empty
 
 from flask import Flask, request, jsonify, render_template
-from pyngrok import ngrok
+try:
+    from pyngrok import ngrok
+    _ngrok_available = True
+except Exception:
+    ngrok = None
+    _ngrok_available = False
 from .parse_code import parse_sign_qr_code
 from urllib.parse import urlparse, parse_qs
 
@@ -112,6 +117,10 @@ def send_qr(in_session, rollcall_id, ngrok_token, session_timeout=SESSION_TIMEOU
     """
     global SESSION_TIMEOUT
     SESSION_TIMEOUT = session_timeout
+
+    if not _ngrok_available:
+        print("pyngrok 不可用（当前环境不支持 ngrok），无法进行二维码签到。")
+        return False
 
     if not ngrok_token:
         print("ngrok token 未配置，无法进行二维码签到。")

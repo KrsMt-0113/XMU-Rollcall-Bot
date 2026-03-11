@@ -1,5 +1,6 @@
 import click
 import sys
+import requests as _requests
 from xmulogin import xmulogin
 from .config import (
     load_config, save_config, is_config_complete, get_cookies_path,
@@ -7,6 +8,7 @@ from .config import (
     get_account_by_id, CONFIG_FILE, delete_account, perform_account_deletion
 )
 from .monitor import start_monitor, base_url, headers
+from . import __version__
 
 # ANSI Color codes
 class Colors:
@@ -20,11 +22,36 @@ class Colors:
     BOLD = '\033[1m'
     GRAY = '\033[90m'
 
+
+def check_pypi_version():
+    """Check if the current version is the latest on PyPI."""
+    try:
+        resp = _requests.get(
+            "https://pypi.org/pypi/xmu-rollcall-cli/json", timeout=5
+        )
+        if resp.status_code == 200:
+            latest = resp.json()["info"]["version"]
+            if _parse_version(latest) > _parse_version(__version__):
+                click.echo(
+                    f"{Colors.WARNING}新版本可用: v{latest}（当前: v{__version__}），"
+                    f"请运行 pip install -U xmu-rollcall-cli 进行更新{Colors.ENDC}"
+                )
+    except Exception:
+        pass
+
+
+def _parse_version(v):
+    """Parse a version string into a comparable tuple of ints."""
+    try:
+        return tuple(int(x) for x in v.split("."))
+    except (ValueError, AttributeError):
+        return (0,)
+
 @click.group(invoke_without_command=True)
 @click.pass_context
 def cli(ctx):
     if ctx.invoked_subcommand is None:
-        click.echo(f"{Colors.OKCYAN}{Colors.BOLD}XMU Rollcall Bot CLI v3.2.1{Colors.ENDC}")
+        click.echo(f"{Colors.OKCYAN}{Colors.BOLD}XMU Rollcall Bot CLI v3.2.2{Colors.ENDC}")
         click.echo(f"\nUsage:")
         click.echo(f"  xmu config    Configure credentials and add accounts")
         click.echo(f"  xmu switch    Switch between accounts")
@@ -210,6 +237,9 @@ def start():
     # 获取当前账号
     current_account = get_current_account(config_data)
     click.echo(f"{Colors.OKCYAN}Using account: {current_account.get('name') or current_account.get('username')} (ID: {current_account.get('id')}){Colors.ENDC}")
+
+    # 检查 PyPI 上是否有新版本
+    check_pypi_version()
 
     # 启动监控
     try:
