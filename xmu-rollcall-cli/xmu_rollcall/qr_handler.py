@@ -10,7 +10,7 @@ from flask import Flask, request, jsonify, render_template
 try:
     from pyngrok import ngrok
     _ngrok_available = True
-except Exception:
+except ImportError:
     ngrok = None
     _ngrok_available = False
 from .parse_code import parse_sign_qr_code

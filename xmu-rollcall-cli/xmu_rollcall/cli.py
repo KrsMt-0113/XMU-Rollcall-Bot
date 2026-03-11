@@ -1,6 +1,6 @@
 import click
 import sys
-import requests as _requests
+import requests
 from xmulogin import xmulogin
 from .config import (
     load_config, save_config, is_config_complete, get_cookies_path,
@@ -26,7 +26,7 @@ class Colors:
 def check_pypi_version():
     """Check if the current version is the latest on PyPI."""
     try:
-        resp = _requests.get(
+        resp = requests.get(
             "https://pypi.org/pypi/xmu-rollcall-cli/json", timeout=5
         )
         if resp.status_code == 200:
