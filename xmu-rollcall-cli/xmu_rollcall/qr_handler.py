@@ -9,9 +9,15 @@ from queue import Queue, Empty
 from flask import Flask, request, jsonify, render_template
 try:
     from pyngrok import ngrok
+    from pyngrok.exception import PyngrokNgrokInstallError
     _ngrok_available = True
 except ImportError:
     ngrok = None
+
+    class PyngrokNgrokInstallError(Exception):
+        """Placeholder so except clauses compile when pyngrok is absent."""
+        pass
+
     _ngrok_available = False
 from .parse_code import parse_sign_qr_code
 from urllib.parse import urlparse, parse_qs
@@ -127,7 +133,11 @@ def send_qr(in_session, rollcall_id, ngrok_token, session_timeout=SESSION_TIMEOU
         print("请运行 xmu config 并配置 ngrok token。")
         return False
 
-    ngrok.set_auth_token(ngrok_token)
+    try:
+        ngrok.set_auth_token(ngrok_token)
+    except PyngrokNgrokInstallError:
+        print("当前系统不支持 ngrok，无法进行二维码签到。")
+        return False
 
     port = 5001
 
@@ -214,6 +224,10 @@ def send_qr(in_session, rollcall_id, ngrok_token, session_timeout=SESSION_TIMEOU
                     continue
 
         print(f"已达到最大重试次数 ({max_retries})，二维码签到失败。")
+        return False
+
+    except PyngrokNgrokInstallError:
+        print("当前系统不支持 ngrok，无法进行二维码签到。")
         return False
 
     finally:
