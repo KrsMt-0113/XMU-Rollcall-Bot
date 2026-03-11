@@ -11,7 +11,7 @@ try:
     from pyngrok import ngrok
     from pyngrok.exception import PyngrokNgrokInstallError
     _ngrok_available = True
-except ImportError:
+except Exception:
     ngrok = None
 
     class PyngrokNgrokInstallError(Exception):
