@@ -1,3 +1,5 @@
+### 注意：2026年发布的新版本由于100%由AI开发，遇到了大量bug，当前已经回退至2025年底的2.1+版本，若你的当前版本可以正常使用，则无需回退。
+
 <div align="center">
 
   <img src="https://socialify.git.ci/KrsMt-0113/XMU-Rollcall-Bot/image?font=JetBrains+Mono&forks=1&language=1&name=1&owner=1&pattern=Plus&stargazers=1&theme=Light" />
