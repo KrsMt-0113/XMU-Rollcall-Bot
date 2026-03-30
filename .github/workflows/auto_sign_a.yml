@@ -6,13 +6,12 @@ on:
     # 时间点填写位置（UTC，精确到分）
     # 规则：分钟 小时 日 月 星期
     # 例：每周一 01:30 UTC 触发： "30 1 * * 1"
-    # 你要 5 个定时就写 5 行；超过 5 个请复制本文件为 b/c 再填
+    # 按需填写多个定时；超过 5 个请复制本文件为 b/c 再填
     # =========================
-    - cron: "30 22 * * 0"   # TODO_1
-    - cron: "35 22 * * 0"   # TODO_2
-    - cron: "40 22 * * 0"   # TODO_3
-    - cron: "45 22 * * 0"   # TODO_4
-    - cron: "50 22 * * 0"   # TODO_5
+    - cron: "15 0 * * 1"     # 周一 08:15（北京时间）
+    - cron: "30 8 * * 1"    # 周一 16:30（北京时间）
+    - cron: "0 2 * * 2"     # 周二 10:00（北京时间）
+    - cron: "0 11 * * 2"    # 周二 19:00（北京时间）
     
 
   workflow_dispatch:
@@ -24,7 +23,7 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
 
     env:
       TZ: Asia/Shanghai
@@ -54,7 +53,7 @@ jobs:
           micromamba run -n autosign pip install -U pip
           micromamba run -n autosign pip install -e ./xmu-rollcall-cli
 
-      - name: Run auto_sign.py (max 20 min)
+      - name: Run auto_sign.py (max 30 min)
         shell: bash
         run: |
           set -euo pipefail
@@ -73,5 +72,5 @@ jobs:
             exit 0
           fi
 
-          # 20 分钟强制结束
-          micromamba run -n autosign timeout 1200s python auto_sign.py
+          # 30 分钟强制结束
+          micromamba run -n autosign timeout 1800s python auto_sign.py
