@@ -5,6 +5,48 @@ from pathlib import Path
 ENV_USERNAME_VAR = "XMU_ROLLCALL_USERNAME"
 ENV_PASSWORD_VAR = "XMU_ROLLCALL_PASSWORD"
 ENV_NAME_VAR = "XMU_ROLLCALL_NAME"
+ENV_DOTENV_PATH_VAR = "XMU_ROLLCALL_DOTENV"
+
+DOTENV_FILENAMES = [".env", ".env.local"]
+
+_dotenv_loaded = False
+
+
+def _load_dotenv_file(path: Path) -> None:
+    if not path.exists():
+        return
+    try:
+        for raw_line in path.read_text(encoding="utf-8").splitlines():
+            line = raw_line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            key = key.strip()
+            if not key:
+                continue
+            value = value.strip().strip('"').strip("'")
+            os.environ.setdefault(key, value)
+    except OSError:
+        pass
+
+
+def _ensure_dotenv_loaded() -> None:
+    global _dotenv_loaded
+    if _dotenv_loaded:
+        return
+    _dotenv_paths = []
+    if manual_path := os.environ.get(ENV_DOTENV_PATH_VAR):
+        _dotenv_paths.append(Path(manual_path))
+    for base in (Path.cwd(), CONFIG_DIR):
+        for name in DOTENV_FILENAMES:
+            _dotenv_paths.append(base / name)
+    for candidate in _dotenv_paths:
+        if candidate.exists():
+            _load_dotenv_file(candidate)
+            break
+    _dotenv_loaded = True
 
 def get_config_dir():
     """
@@ -54,6 +96,7 @@ DEFAULT_ACCOUNT = {
 
 def get_env_account():
     """从环境变量构建账号信息，避免写入配置文件"""
+    _ensure_dotenv_loaded()
     username = os.environ.get(ENV_USERNAME_VAR)
     password = os.environ.get(ENV_PASSWORD_VAR)
 
