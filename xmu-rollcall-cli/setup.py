@@ -7,7 +7,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="xmu-rollcall-cli",
-    version="3.0.0",
+    version="3.2.0",
     packages=find_packages(),
     include_package_data=True,
 
@@ -67,4 +67,3 @@ setup(
     # License
     license="MIT",
 )
-
