@@ -1,9 +1,7 @@
 import uuid
 import time
-import asyncio
-import aiohttp
 import math
-from aiohttp import CookieJar
+import requests
 
 base_url = "https://lnt.xmu.edu.cn"
 headers = {
@@ -17,64 +15,81 @@ headers = {
     "Referer": "https://ids.xmu.edu.cn/authserver/login",
 }
 
-def pad(i):
-    return str(i).zfill(4)
+def find_number_code(data, depth=0, max_depth=10):
+    """Extract number_code from nested dict/list API responses.
+
+    Args:
+        data: Parsed JSON payload from Tronclass APIs.
+        depth: Current recursive depth when traversing nested structures.
+        max_depth: Maximum depth allowed for traversal to avoid pathological recursion.
+
+    Returns:
+        str or None: The first discovered number_code value, or None if not found.
+    """
+    if depth > max_depth:
+        return None
+    if isinstance(data, dict):
+        number_code = data.get("number_code")
+        if number_code is not None:
+            return str(number_code)
+        for value in data.values():
+            nested_code = find_number_code(value, depth + 1, max_depth)
+            if nested_code:
+                return nested_code
+    elif isinstance(data, list):
+        for item in data:
+            nested_code = find_number_code(item, depth + 1, max_depth)
+            if nested_code:
+                return nested_code
+    return None
 
 def send_code(in_session, rollcall_id):
-    url = f"{base_url}/api/rollcall/{rollcall_id}/answer_number_rollcall"
-    print("Trying number code...")
+    code_url = f"{base_url}/api/rollcall/{rollcall_id}/student_rollcalls"
+    answer_url = f"{base_url}/api/rollcall/{rollcall_id}/answer_number_rollcall"
+    print("Trying number code from API...")
     t00 = time.time()
-
-    async def put_request(i, session, stop_flag, answer_url, sem, timeout):
-        if stop_flag.is_set():
-            return None
-        async with sem:
-            if stop_flag.is_set():
-                return None
-            payload = {
-                "deviceId": str(uuid.uuid4()),
-                "numberCode": pad(i)
-            }
-            try:
-                async with session.put(answer_url, json=payload) as r:
-                    if r.status == 200:
-                        stop_flag.set()
-                        return pad(i)
-            except Exception:
-                pass
-            return None
-
-    async def main():
-        stop_flag = asyncio.Event()
-        sem = asyncio.Semaphore(200)
-        timeout = aiohttp.ClientTimeout(total=5)
-        cookie_jar = CookieJar()
-        for c in in_session.cookies:
-            cookie_jar.update_cookies({c.name: c.value})
-        async with aiohttp.ClientSession(headers=in_session.headers, cookie_jar=cookie_jar) as session:
-            tasks = [asyncio.create_task(put_request(i, session, stop_flag, url, sem, timeout)) for i in range(10000)]
-            try:
-                for coro in asyncio.as_completed(tasks):
-                    res = await coro
-                    if res is not None:
-                        for t in tasks:
-                            if not t.done():
-                                t.cancel()
-                        print("Number code rollcall answered successfully.\nNumber code: ", res)
-                        time.sleep(5)
-                        t01 = time.time()
-                        print("Time: %.2f s." % (t01 - t00))
-                        return True
-            finally:
-                for t in tasks:
-                    if not t.done():
-                        t.cancel()
-                await asyncio.gather(*tasks, return_exceptions=True)
+    request_headers = in_session.headers
+    try:
+        code_response = in_session.get(code_url, headers=request_headers)
+        if code_response.status_code != 200:
+            t01 = time.time()
+            print(f"Failed to get number code. Status: {code_response.status_code}\nTime: {t01 - t00:.2f} s.")
+            return False
+        code_data = code_response.json()
+    except requests.RequestException as e:
         t01 = time.time()
-        print("Failed.\nTime: %.2f s." % (t01 - t00))
+        print(f"Failed to request number code API: {e}\nTime: {t01 - t00:.2f} s.")
+        return False
+    except ValueError as e:
+        t01 = time.time()
+        print(f"Failed to parse number code API response: {e}\nTime: {t01 - t00:.2f} s.")
         return False
 
-    return asyncio.run(main())
+    number_code = find_number_code(code_data)
+    if not number_code:
+        t01 = time.time()
+        print(f"Failed to get number code. 'number_code' not found in API response.\nTime: {t01 - t00:.2f} s.")
+        return False
+
+    payload = {
+        "deviceId": str(uuid.uuid4()),
+        "numberCode": number_code
+    }
+    try:
+        response = in_session.put(answer_url, json=payload, headers=request_headers)
+        if response.status_code == 200:
+            print("Number code rollcall answered successfully.\nNumber code: ", number_code)
+            time.sleep(5)
+            t01 = time.time()
+            print(f"Time: {t01 - t00:.2f} s.")
+            return True
+        t01 = time.time()
+        print(f"Failed to submit number code. Status: {response.status_code}\nTime: {t01 - t00:.2f} s.")
+        return False
+    except requests.RequestException as e:
+        t01 = time.time()
+        print(f"Failed to submit number code: {e}\nTime: {t01 - t00:.2f} s.")
+        return False
 
 def send_radar(in_session, rollcall_id):
     url = f"{base_url}/api/rollcall/{rollcall_id}/answer"

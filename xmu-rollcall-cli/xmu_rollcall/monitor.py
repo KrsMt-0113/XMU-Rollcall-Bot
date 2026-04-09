@@ -75,7 +75,7 @@ def print_banner():
     line = '=' * width
 
     title1 = "XMU Rollcall Bot CLI"
-    title2 = "Version 3.1.9"
+    title2 = "Version 3.2.0"
 
     print(f"{Colors.OKCYAN}{line}{Colors.ENDC}")
     print(center_text(f"{Colors.BOLD}{title1}{Colors.ENDC}"))
@@ -325,4 +325,3 @@ def start_monitor(account):
         print(f"{center_text(f'{Colors.GRAY}Total running time: {format_time(int(time.time() - start_time))}{Colors.ENDC}')}")
         print(f"\n{center_text(f'{Colors.OKGREEN}Goodbye{Colors.ENDC}')}\n")
         sys.exit(0)
-
