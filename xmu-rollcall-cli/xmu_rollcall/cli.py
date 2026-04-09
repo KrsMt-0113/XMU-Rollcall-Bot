@@ -1,6 +1,7 @@
 import click
 import sys
 from xmulogin import xmulogin
+from . import __version__
 from .config import (
     load_config, save_config, is_config_complete, get_cookies_path,
     add_account, get_all_accounts, get_current_account, set_current_account,
@@ -24,7 +25,7 @@ class Colors:
 @click.pass_context
 def cli(ctx):
     if ctx.invoked_subcommand is None:
-        click.echo(f"{Colors.OKCYAN}{Colors.BOLD}XMU Rollcall Bot CLI v3.2.0{Colors.ENDC}")
+        click.echo(f"{Colors.OKCYAN}{Colors.BOLD}XMU Rollcall Bot CLI v{__version__}{Colors.ENDC}")
         click.echo(f"\nUsage:")
         click.echo(f"  xmu config    Configure credentials and add accounts")
         click.echo(f"  xmu switch    Switch between accounts")

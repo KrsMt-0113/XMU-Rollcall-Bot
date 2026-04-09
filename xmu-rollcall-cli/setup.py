@@ -1,13 +1,22 @@
 from setuptools import setup, find_packages
 import pathlib
+import re
+
+# Read version from package without importing it
+here = pathlib.Path(__file__).parent.resolve()
+version_match = re.search(
+    r'^__version__ = ["\']([^"\']+)["\']',
+    (here / "xmu_rollcall" / "__init__.py").read_text(encoding="utf-8"),
+    re.M,
+)
+_version = version_match.group(1) if version_match else "unknown"
 
 # Read the contents of README file
-here = pathlib.Path(__file__).parent.resolve()
 long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="xmu-rollcall-cli",
-    version="3.2.0",
+    version=_version,
     packages=find_packages(),
     include_package_data=True,
 
