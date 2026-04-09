@@ -10,6 +10,8 @@ name: Upload Python Package
 
 on:
   push:
+    branches:
+      - main
 
 permissions:
   contents: read
