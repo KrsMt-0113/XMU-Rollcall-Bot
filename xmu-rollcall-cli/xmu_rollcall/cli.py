@@ -24,7 +24,7 @@ class Colors:
 @click.pass_context
 def cli(ctx):
     if ctx.invoked_subcommand is None:
-        click.echo(f"{Colors.OKCYAN}{Colors.BOLD}XMU Rollcall Bot CLI v3.1.9{Colors.ENDC}")
+        click.echo(f"{Colors.OKCYAN}{Colors.BOLD}XMU Rollcall Bot CLI v3.0.0{Colors.ENDC}")
         click.echo(f"\nUsage:")
         click.echo(f"  xmu config    Configure credentials and add accounts")
         click.echo(f"  xmu switch    Switch between accounts")
