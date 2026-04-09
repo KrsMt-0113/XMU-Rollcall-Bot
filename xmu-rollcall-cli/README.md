@@ -9,7 +9,7 @@ A command-line tool for monitoring and auto-answering Tronclass rollcalls at Xia
 - Login with XMU unified authentication through `xmulogin`
 - Continuous rollcall polling (1-second interval)
 - Automatic handling for:
-  - Number rollcalls (4-digit code brute-force)
+  - Number rollcalls (fetch number code and answer directly)
   - Radar rollcalls (location solving)
 - Multi-account management in one local config
 - Session cookie cache and refresh support
@@ -98,4 +98,3 @@ export XMU_ROLLCALL_CONFIG_DIR="$HOME/Documents/.xmu_rollcall"
 ## License
 
 MIT License
-
