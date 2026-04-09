@@ -47,7 +47,7 @@
 
 ## 现版本使用方法:
 
-前往 (此处)[https://krsmt.notion.site/cli-doc], 了解在各种设备上使用该工具的安装向导与指令语句。
+前往 [此处](https://krsmt.notion.site/cli-doc), 了解在各种设备上使用该工具的安装向导与指令语句。
 
 ## ⚠️ 警告
 
