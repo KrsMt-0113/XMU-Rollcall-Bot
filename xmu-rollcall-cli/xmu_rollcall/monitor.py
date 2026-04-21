@@ -5,6 +5,7 @@ import requests
 import shutil
 import re
 from xmulogin import xmulogin
+from . import __version__
 from .utils import clear_screen, save_session, load_session, verify_session
 from .rollcall_handler import process_rollcalls
 from .config import get_cookies_path
@@ -84,7 +85,7 @@ def print_banner():
     line = '=' * width
 
     title1 = "XMU Rollcall Bot CLI"
-    title2 = "Version 3.1.6"
+    title2 = f"Version {__version__}"
 
     print(f"{Colors.OKCYAN}{line}{Colors.ENDC}")
     print(center_text(f"{Colors.BOLD}{title1}{Colors.ENDC}"))
@@ -347,4 +348,3 @@ def start_monitor(account):
         print(f"{center_text(f'{Colors.GRAY}Total running time: {format_time(int(time.time() - start_time))}{Colors.ENDC}')}")
         print(f"\n{center_text(f'{Colors.OKGREEN}Goodbye{Colors.ENDC}')}\n")
         sys.exit(0)
-

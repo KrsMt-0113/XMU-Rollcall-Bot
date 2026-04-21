@@ -1,22 +1,22 @@
 from setuptools import setup, find_packages
 import pathlib
+import re
+
+# Read version from package without importing it
+here = pathlib.Path(__file__).parent.resolve()
+version_match = re.search(
+    r'^__version__ = ["\']([^"\']+)["\']',
+    (here / "xmu_rollcall" / "__init__.py").read_text(encoding="utf-8"),
+    re.M,
+)
+_version = version_match.group(1) if version_match else "unknown"
 
 # Read the contents of README file
-here = pathlib.Path(__file__).parent.resolve()
-readme_path = here / "README.md"
-if not readme_path.exists():
-    # Allow using repository root README when installing from subdirectory
-    parent_readme = here.parent / "README.md"
-    readme_path = parent_readme if parent_readme.exists() else None
-
-if readme_path is not None:
-    long_description = readme_path.read_text(encoding="utf-8")
-else:
-    long_description = "XMU Rollcall Bot CLI - Automated rollcall monitoring and answering for Xiamen University Tronclass"
+long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="xmu-rollcall-cli",
-    version="3.1.7",
+    version=_version,
     packages=find_packages(),
     include_package_data=True,
 
@@ -76,4 +76,3 @@ setup(
     # License
     license="MIT",
 )
-
