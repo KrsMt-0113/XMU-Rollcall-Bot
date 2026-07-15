@@ -15,6 +15,74 @@ headers = {
     "Referer": "https://ids.xmu.edu.cn/authserver/login",
 }
 
+SIGNED_ATTENDANCE_STATUSES = {"on_call", "on_call_fine"}
+
+
+def fetch_rollcall_details(in_session, rollcall_id):
+    """Fetch the rollcall detail payload used for attendance and number codes."""
+    url = f"{base_url}/api/rollcall/{rollcall_id}/student_rollcalls"
+    try:
+        response = in_session.get(url, headers=in_session.headers, timeout=15)
+        if response.status_code != 200:
+            print(f"Failed to get attendance status. HTTP {response.status_code}.")
+            return None
+        payload = response.json()
+        if not isinstance(payload, dict):
+            print("Failed to get attendance status. Unexpected response format.")
+            return None
+        return payload
+    except (requests.RequestException, ValueError) as exc:
+        print(f"Failed to get attendance status: {exc}")
+        return None
+
+
+def calculate_attendance_progress(data):
+    """Return ``(signed, total, ratio)`` for a student_rollcalls response."""
+    if not isinstance(data, dict):
+        return None
+    students = data.get("student_rollcalls")
+    if not isinstance(students, list) or not students:
+        return None
+
+    signed = sum(
+        1
+        for student in students
+        if isinstance(student, dict)
+        and str(student.get("status", "")).lower() in SIGNED_ATTENDANCE_STATUSES
+    )
+    total = len(students)
+    return signed, total, signed / total
+
+
+def attendance_threshold_reached(in_session, rollcall_id, threshold):
+    """Check whether enough classmates have answered.
+
+    The detail payload is returned as the second value so number rollcalls can
+    reuse it instead of immediately querying the same endpoint again.
+    """
+    if threshold <= 0:
+        return True, None
+
+    details = fetch_rollcall_details(in_session, rollcall_id)
+    progress = calculate_attendance_progress(details)
+    if progress is None:
+        print("Attendance progress is unavailable; waiting before answering.")
+        return False, details
+
+    signed, total, ratio = progress
+    if ratio < threshold:
+        print(
+            f"Waiting for attendance threshold: {signed}/{total} "
+            f"({ratio:.0%}), target {threshold:.0%}."
+        )
+        return False, details
+
+    print(
+        f"Attendance threshold reached: {signed}/{total} "
+        f"({ratio:.0%}), target {threshold:.0%}."
+    )
+    return True, details
+
 def find_number_code(data, depth=0, max_depth=10):
     """Extract number_code from nested dict/list API responses.
 
@@ -43,26 +111,15 @@ def find_number_code(data, depth=0, max_depth=10):
                 return nested_code
     return None
 
-def send_code(in_session, rollcall_id):
-    code_url = f"{base_url}/api/rollcall/{rollcall_id}/student_rollcalls"
+def send_code(in_session, rollcall_id, rollcall_details=None):
     answer_url = f"{base_url}/api/rollcall/{rollcall_id}/answer_number_rollcall"
     print("Trying number code from API...")
     t00 = time.time()
     request_headers = in_session.headers
-    try:
-        code_response = in_session.get(code_url, headers=request_headers)
-        if code_response.status_code != 200:
-            t01 = time.time()
-            print(f"Failed to get number code. Status: {code_response.status_code}\nTime: {t01 - t00:.2f} s.")
-            return False
-        code_data = code_response.json()
-    except requests.RequestException as e:
+    code_data = rollcall_details or fetch_rollcall_details(in_session, rollcall_id)
+    if code_data is None:
         t01 = time.time()
-        print(f"Failed to request number code API: {e}\nTime: {t01 - t00:.2f} s.")
-        return False
-    except ValueError as e:
-        t01 = time.time()
-        print(f"Failed to parse number code API response: {e}\nTime: {t01 - t00:.2f} s.")
+        print(f"Failed to get number code.\nTime: {t01 - t00:.2f} s.")
         return False
 
     number_code = find_number_code(code_data)
@@ -76,7 +133,12 @@ def send_code(in_session, rollcall_id):
         "numberCode": number_code
     }
     try:
-        response = in_session.put(answer_url, json=payload, headers=request_headers)
+        response = in_session.put(
+            answer_url,
+            json=payload,
+            headers=request_headers,
+            timeout=15,
+        )
         if response.status_code == 200:
             print("Number code rollcall answered successfully.\nNumber code: ", number_code)
             time.sleep(5)
@@ -90,6 +152,24 @@ def send_code(in_session, rollcall_id):
         t01 = time.time()
         print(f"Failed to submit number code: {e}\nTime: {t01 - t00:.2f} s.")
         return False
+
+
+def send_self_registration(in_session, rollcall_id):
+    """Answer a manual self-registration rollcall."""
+    url = f"{base_url}/api/rollcall/{rollcall_id}/answer_self_registration_rollcall"
+    payload = {"deviceId": str(uuid.uuid4())}
+    try:
+        response = in_session.put(url, json=payload, headers=in_session.headers, timeout=15)
+    except requests.RequestException as exc:
+        print(f"Failed to submit self-registration rollcall: {exc}")
+        return False
+
+    if response.status_code == 200:
+        print("Self-registration rollcall answered successfully.")
+        return True
+
+    print(f"Failed to submit self-registration rollcall. HTTP {response.status_code}.")
+    return False
 
 def send_radar(in_session, rollcall_id):
     url = f"{base_url}/api/rollcall/{rollcall_id}/answer"

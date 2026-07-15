@@ -35,10 +35,12 @@ def get_config_dir():
 
 CONFIG_DIR = get_config_dir()
 CONFIG_FILE = CONFIG_DIR / "config.json"
+DEFAULT_ATTENDANCE_THRESHOLD = 0.2
 
 DEFAULT_CONFIG = {
     "accounts": [],
-    "current_account_id": None
+    "current_account_id": None,
+    "attendance_threshold": DEFAULT_ATTENDANCE_THRESHOLD,
 }
 
 DEFAULT_ACCOUNT = {
@@ -47,6 +49,15 @@ DEFAULT_ACCOUNT = {
     "username": "",
     "password": ""
 }
+
+
+def new_default_config():
+    """Return a fresh default so callers never share the accounts list."""
+    return {
+        "accounts": [],
+        "current_account_id": None,
+        "attendance_threshold": DEFAULT_ATTENDANCE_THRESHOLD,
+    }
 
 def ensure_config_dir():
     """确保配置目录存在"""
@@ -75,20 +86,26 @@ def load_config():
                                 "username": old_username,
                                 "password": old_password
                             }],
-                            "current_account_id": 1
+                            "current_account_id": 1,
+                            "attendance_threshold": DEFAULT_ATTENDANCE_THRESHOLD,
                         }
                         return new_config
-                    return DEFAULT_CONFIG.copy()
+                    return new_default_config()
+                config.setdefault("attendance_threshold", DEFAULT_ATTENDANCE_THRESHOLD)
                 return config
         except Exception:
-            return DEFAULT_CONFIG.copy()
-    return DEFAULT_CONFIG.copy()
+            return new_default_config()
+    return new_default_config()
 
 def save_config(config):
     """保存配置文件"""
     ensure_config_dir()
     with open(CONFIG_FILE, "w", encoding="utf-8") as f:
         json.dump(config, f, indent=2, ensure_ascii=False)
+    try:
+        os.chmod(CONFIG_FILE, 0o600)
+    except OSError:
+        pass
 
 def get_next_account_id(config):
     """获取下一个可用的账号ID"""
@@ -141,8 +158,24 @@ def is_config_complete(config):
     current_account = get_current_account(config)
     if current_account is None:
         return False
-    required_fields = ["username", "password"]
-    return all(current_account.get(field) for field in required_fields)
+    has_credentials = all(
+        current_account.get(field) for field in ("username", "password")
+    )
+    has_cookies = os.path.exists(get_cookies_path(current_account.get("id")))
+    return has_credentials or has_cookies
+
+
+def get_attendance_threshold(config):
+    """Return a validated attendance threshold between zero and one."""
+    try:
+        threshold = float(
+            config.get("attendance_threshold", DEFAULT_ATTENDANCE_THRESHOLD)
+        )
+    except (TypeError, ValueError):
+        return DEFAULT_ATTENDANCE_THRESHOLD
+    if 0 <= threshold <= 1:
+        return threshold
+    return DEFAULT_ATTENDANCE_THRESHOLD
 
 def get_cookies_path(account_id=None):
     """获取cookies文件路径，根据账号ID命名"""
@@ -226,4 +259,3 @@ def perform_account_deletion(cookies_to_delete, cookies_to_rename):
             if os.path.exists(new_path):
                 os.remove(new_path)
             os.rename(old_path, new_path)
-

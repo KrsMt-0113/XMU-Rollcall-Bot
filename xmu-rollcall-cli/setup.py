@@ -41,6 +41,9 @@ setup(
         "click>=8.1.0",
         "aiohttp>=3.9.0",
     ],
+    extras_require={
+        "browser": ["playwright>=1.40.0; python_version >= '3.8'"],
+    },
 
     # Entry points
     entry_points={

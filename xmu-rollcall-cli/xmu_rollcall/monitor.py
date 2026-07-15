@@ -51,7 +51,7 @@ def get_terminal_width():
     """获取终端宽度"""
     try:
         return shutil.get_terminal_size().columns
-    except:
+    except OSError:
         return 80
 
 _ANSI_ESCAPE = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
@@ -201,10 +201,10 @@ def update_footer_text():
     sys.stdout.write("\033[?25h")
     sys.stdout.flush()
 
-def start_monitor(account):
+def start_monitor(account, attendance_threshold=0.2):
     """启动监控程序"""
-    USERNAME = account['username']
-    PASSWORD = account['password']
+    USERNAME = account.get('username', '')
+    PASSWORD = account.get('password', '')
     ACCOUNT_ID = account.get('id', 1)
     ACCOUNT_NAME = account.get('name', '')
     # LATITUDE = account.get('latitude', 0)
@@ -239,6 +239,14 @@ def start_monitor(account):
             print_login_status("Failed to load session", False)
 
     if not session:
+        if not USERNAME or not PASSWORD:
+            print_login_status(
+                "Cached cookies are missing or expired. Run `xmu auth import` "
+                "or `xmu auth browser` to authenticate again.",
+                False,
+            )
+            time.sleep(2)
+            sys.exit(1)
         print(f"{Colors.OKCYAN}[Step 2/3]{Colors.ENDC} Logging in with credentials...")
         time.sleep(2)
         session = xmulogin(type=3, username=USERNAME, password=PASSWORD)
@@ -304,7 +312,11 @@ def start_monitor(account):
                             print(f"\n{Colors.WARNING}{Colors.BOLD}{'!' * width}{Colors.ENDC}")
                             print(center_text(f"{Colors.WARNING}{Colors.BOLD}NEW ROLLCALL DETECTED{Colors.ENDC}"))
                             print(f"{Colors.WARNING}{Colors.BOLD}{'!' * width}{Colors.ENDC}\n")
-                            temp_data = process_rollcalls(temp_data, session)
+                            temp_data = process_rollcalls(
+                                temp_data,
+                                session,
+                                attendance_threshold,
+                            )
                             print_separator("=")
                             print(f"\n{center_text(f'{Colors.GRAY}Press Ctrl+C to exit, continuing monitor...{Colors.ENDC}')}\n")
                             try:

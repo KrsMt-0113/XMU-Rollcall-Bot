@@ -40,6 +40,9 @@ dependencies = [
     "aiohttp>=3.9.0",
 ]
 
+[project.optional-dependencies]
+browser = ["playwright>=1.40.0; python_version >= '3.8'"]
+
 [project.urls]
 Homepage = "https://github.com/KrsMt-0113/XMU-Rollcall-Bot"
 Repository = "https://github.com/KrsMt-0113/XMU-Rollcall-Bot"

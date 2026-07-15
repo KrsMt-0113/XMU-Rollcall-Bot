@@ -30,13 +30,28 @@
 pip install xmu-rollcall-cli
 ```
 
+如需使用桌面浏览器登录回退：
+
+```bash
+pip install 'xmu-rollcall-cli[browser]'
+playwright install chromium
+```
+
+浏览器登录回退需要 Python 3.8 或更高版本。
+
 ## 使用方法
 
 ```bash
 xmu config  # 配置账号。使用统一身份认证账号密码。
 xmu switch  # 切换账号。
-xmu start   # 启动监控。
+xmu start   # 启动监控，默认等待班级 20% 的同学完成签到。
+xmu auth import --file cookies.json  # 导入已登录的 Cookie。
+xmu auth browser  # 打开官方登录页并捕获登录后的 Cookie。
 ```
+
+现已支持自主点名。可用 `xmu start --attendance-threshold 0` 关闭延迟签到。
+移动端或沙盒环境无法拉起浏览器时请使用 Cookie 导入。Cookie 等同于登录凭据，
+请勿上传到 issue 或提供给他人。
 
 ## 其他
 

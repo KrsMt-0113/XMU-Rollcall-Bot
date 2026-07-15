@@ -1,13 +1,17 @@
 import click
 import sys
+from pathlib import Path
 from xmulogin import xmulogin
 from . import __version__
+from .auth import CookieImportError, capture_browser_session, session_from_cookie_input
 from .config import (
     load_config, save_config, is_config_complete, get_cookies_path,
     add_account, get_all_accounts, get_current_account, set_current_account,
-    get_account_by_id, CONFIG_FILE, delete_account, perform_account_deletion
+    get_account_by_id, get_attendance_threshold, CONFIG_FILE, delete_account,
+    perform_account_deletion
 )
 from .monitor import start_monitor, base_url, headers
+from .utils import save_session, verify_session
 
 # ANSI Color codes
 class Colors:
@@ -26,12 +30,13 @@ class Colors:
 def cli(ctx):
     if ctx.invoked_subcommand is None:
         click.echo(f"{Colors.OKCYAN}{Colors.BOLD}XMU Rollcall Bot CLI v{__version__}{Colors.ENDC}")
-        click.echo(f"\nUsage:")
-        click.echo(f"  xmu config    Configure credentials and add accounts")
-        click.echo(f"  xmu switch    Switch between accounts")
-        click.echo(f"  xmu start     Start monitoring rollcalls")
-        click.echo(f"  xmu refresh   Refresh the login status")
-        click.echo(f"  xmu --help    Show this message")
+        click.echo("\nUsage:")
+        click.echo("  xmu config    Configure credentials and add accounts")
+        click.echo("  xmu switch    Switch between accounts")
+        click.echo("  xmu start     Start monitoring rollcalls")
+        click.echo("  xmu auth      Import cookies or log in through a browser")
+        click.echo("  xmu refresh   Refresh the login status")
+        click.echo("  xmu --help    Show this message")
 
 @cli.command()
 def config():
@@ -88,11 +93,15 @@ def config():
                 except RuntimeError as e:
                     click.echo(f"{Colors.FAIL}✗ Failed to save configuration: {str(e)}{Colors.ENDC}")
                     click.echo(f"{Colors.WARNING}Tip: In sandboxed environments (like a-Shell), set environment variable:{Colors.ENDC}")
-                    click.echo(f"  export XMU_ROLLCALL_CONFIG_DIR=~/Documents/.xmu_rollcall")
+                    click.echo("  export XMU_ROLLCALL_CONFIG_DIR=~/Documents/.xmu_rollcall")
             else:
                 click.echo(f"{Colors.FAIL}✗ Login failed. Please check your credentials.{Colors.ENDC}")
         except Exception as e:
             click.echo(f"{Colors.FAIL}✗ Error during login validation: {str(e)}{Colors.ENDC}")
+            click.echo(
+                f"{Colors.WARNING}Fallback: use `xmu auth import` or "
+                f"`xmu auth browser`.{Colors.ENDC}"
+            )
 
     def delete_existing_account():
         """删除账号"""
@@ -152,11 +161,12 @@ def config():
         click.echo(f"{Colors.BOLD}Choose an action:{Colors.ENDC}")
         click.echo(f"  {Colors.OKCYAN}n{Colors.ENDC} - Add new account")
         click.echo(f"  {Colors.OKCYAN}d{Colors.ENDC} - Delete account")
+        click.echo(f"  {Colors.OKCYAN}t{Colors.ENDC} - Set attendance threshold")
         click.echo(f"  {Colors.OKCYAN}q{Colors.ENDC} - Quit")
 
         action = click.prompt(
             f"\n{Colors.BOLD}Action{Colors.ENDC}",
-            type=click.Choice(['n', 'd', 'q'], case_sensitive=False),
+            type=click.Choice(['n', 'd', 't', 'q'], case_sensitive=False),
             default='q'
         )
 
@@ -166,6 +176,19 @@ def config():
             add_new_account()
         elif action.lower() == 'd':
             delete_existing_account()
+        elif action.lower() == 't':
+            current_threshold = get_attendance_threshold(current_config)
+            threshold = click.prompt(
+                f"{Colors.BOLD}Attendance threshold (0 to 1){Colors.ENDC}",
+                type=click.FloatRange(0, 1),
+                default=current_threshold,
+            )
+            current_config["attendance_threshold"] = threshold
+            save_config(current_config)
+            click.echo(
+                f"{Colors.OKGREEN}✓ Attendance threshold set to "
+                f"{threshold:.0%}.{Colors.ENDC}\n"
+            )
         elif action.lower() == 'q':
             # 退出前显示最终账号列表
             accounts = get_all_accounts(current_config)
@@ -180,7 +203,13 @@ def config():
             break
 
 @cli.command()
-def start():
+@click.option(
+    "--attendance-threshold",
+    type=click.FloatRange(0, 1),
+    default=None,
+    help="Fraction of classmates who must sign first (default: configured 20%).",
+)
+def start(attendance_threshold):
     """启动签到监控"""
     # 加载配置
     config_data = load_config()
@@ -193,11 +222,17 @@ def start():
 
     # 获取当前账号
     current_account = get_current_account(config_data)
+    if attendance_threshold is None:
+        attendance_threshold = get_attendance_threshold(config_data)
     click.echo(f"{Colors.OKCYAN}Using account: {current_account.get('name') or current_account.get('username')} (ID: {current_account.get('id')}){Colors.ENDC}")
+    click.echo(
+        f"{Colors.OKCYAN}Attendance threshold: "
+        f"{attendance_threshold:.0%}{Colors.ENDC}"
+    )
 
     # 启动监控
     try:
-        start_monitor(current_account)
+        start_monitor(current_account, attendance_threshold)
     except KeyboardInterrupt:
         click.echo(f"\n{Colors.WARNING}Shutting down...{Colors.ENDC}")
         sys.exit(0)
@@ -275,6 +310,121 @@ def switch():
     else:
         click.echo(f"{Colors.FAIL}✗ Account not found!{Colors.ENDC}")
         sys.exit(1)
+
+
+def _persist_authenticated_session(config_data, session, account_id=None):
+    profile = verify_session(session)
+    if not profile:
+        raise RuntimeError(
+            "The imported session could not access /api/profile. "
+            "Check that the cookies belong to lnt.xmu.edu.cn and are not expired."
+        )
+
+    account = None
+    explicit_account = account_id is not None
+    if account_id is not None:
+        account = get_account_by_id(config_data, account_id)
+        if account is None:
+            raise RuntimeError(f"Account ID {account_id} does not exist.")
+    else:
+        account = get_current_account(config_data)
+
+    name = profile.get("name") or profile.get("nickname") or "Cookie account"
+    profile_identity = (
+        profile.get("user_no")
+        or profile.get("username")
+        or profile.get("email")
+    )
+    username = profile_identity or (account and account.get("username")) or name
+
+    if (
+        account is not None
+        and not explicit_account
+        and profile_identity
+        and account.get("username")
+        and str(account["username"]) != str(profile_identity)
+    ):
+        account = None
+
+    if account is None:
+        account_id = add_account(config_data, username, "", name)
+        account = get_account_by_id(config_data, account_id)
+        set_current_account(config_data, account_id)
+    else:
+        account_id = account["id"]
+        account["name"] = name
+        if not account.get("username"):
+            account["username"] = username
+
+    cookies_path = get_cookies_path(account_id)
+    if not save_session(session, cookies_path):
+        raise RuntimeError(f"Failed to save cookies to {cookies_path}.")
+    save_config(config_data)
+    return account, cookies_path
+
+
+@cli.group()
+def auth():
+    """Authenticate with imported cookies or an interactive browser."""
+
+
+@auth.command(name="import")
+@click.option(
+    "--file",
+    "file_path",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    help="Read cookies from a JSON or text file instead of prompting.",
+)
+@click.option("--account-id", type=int, help="Replace cookies for this account ID.")
+def import_cookies(file_path, account_id):
+    """Import a JSON cookie export or raw Cookie header."""
+    try:
+        if file_path:
+            cookie_input = file_path.read_text(encoding="utf-8")
+        else:
+            cookie_input = click.prompt(
+                "Paste cookie JSON or a raw Cookie header",
+                hide_input=True,
+            )
+        session = session_from_cookie_input(cookie_input)
+        account, cookies_path = _persist_authenticated_session(
+            load_config(), session, account_id
+        )
+    except (CookieImportError, OSError, RuntimeError) as exc:
+        raise click.ClickException(str(exc))
+
+    click.echo(
+        f"{Colors.OKGREEN}✓ Cookies imported for "
+        f"{account.get('name') or account.get('username')}.{Colors.ENDC}"
+    )
+    click.echo(f"{Colors.GRAY}Cookie cache: {cookies_path}{Colors.ENDC}")
+
+
+@auth.command(name="browser")
+@click.option("--account-id", type=int, help="Replace cookies for this account ID.")
+@click.option(
+    "--timeout",
+    type=click.IntRange(30, 1800),
+    default=300,
+    show_default=True,
+    help="Seconds to wait for browser login.",
+)
+def browser_login(account_id, timeout):
+    """Open Chromium, wait for login, and capture the resulting cookies."""
+    click.echo("Opening Chromium. Complete XMU login in the browser window...")
+    try:
+        session = capture_browser_session(timeout)
+        account, cookies_path = _persist_authenticated_session(
+            load_config(), session, account_id
+        )
+    except RuntimeError as exc:
+        raise click.ClickException(str(exc))
+
+    click.echo(
+        f"{Colors.OKGREEN}✓ Browser login captured for "
+        f"{account.get('name') or account.get('username')}.{Colors.ENDC}"
+    )
+    click.echo(f"{Colors.GRAY}Cookie cache: {cookies_path}{Colors.ENDC}")
 
 
 if __name__ == '__main__':

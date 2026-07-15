@@ -24,8 +24,13 @@ def save_session(sess: requests.Session, path: str):
         cj_dict = requests.utils.dict_from_cookiejar(sess.cookies)
         with open(path, "w", encoding="utf-8") as f:
             json.dump(cj_dict, f)
+        try:
+            os.chmod(path, 0o600)
+        except OSError:
+            pass
+        return True
     except Exception:
-        pass
+        return False
 
 def load_session(sess: requests.Session, path: str):
     """从文件加载session"""
@@ -48,4 +53,3 @@ def verify_session(sess: requests.Session) -> dict:
     except Exception:
         pass
     return {}
-
